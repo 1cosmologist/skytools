@@ -1,0 +1,22 @@
+[build-system]
+build-backend = 'mesonpy'
+requires = ['meson-python']
+
+[project]
+name = 'skytools'
+version = '0.0.1'
+description = 'Python version of PSM tools for CMB data analysis.'
+readme = 'README.md'
+requires-python = '>=3.9'
+dependencies = [
+    "astropy>=5.2.1",
+    "healpy>=1.16.0",
+    "numpy>=1.23.5",
+    "scipy>=1.10.0",
+    "joblib>=1.2.0",
+]
+license = {file = 'LICENSE.txt'}
+authors = [
+  {name = 'Shamik Ghosh', email = 'shamik@lbl.gov'},
+  {name = 'Jacques Delabrouille', email = 'jdelabrouille@lbl.gov'}
+]
