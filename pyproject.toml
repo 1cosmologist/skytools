@@ -9,11 +9,11 @@ description = 'Python version of PSM tools for CMB data analysis.'
 readme = 'README.md'
 requires-python = '>=3.9'
 dependencies = [
-    "astropy>=5.2.1",
+    "astropy",
     "healpy>=1.16.0",
-    "numpy>=1.23.5",
-    "scipy>=1.10.0",
-    "joblib>=1.2.0",
+    "numpy",
+    "scipy",
+    "joblib",
 ]
 license = {file = 'LICENSE.txt'}
 authors = [
