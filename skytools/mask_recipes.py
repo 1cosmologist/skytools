@@ -45,16 +45,24 @@ def smalldisc_mask(nside, lon, lat, radius_in_deg, aposize=None):
 
     return mask
 
-def latitude_mask(nside, lat_cut, aposize, inverse=False):
+def latitude_mask(nside, lat_cut, aposize=None, inverse=False):
     npix = hp.nside2npix(nside)
     mask = np.zeros((npix,))
 
     ipix = np.arange(npix)
     lon, lat = hp.pix2ang(nside, ipix, lonlat=True)
 
+    if aposize == None:
+        if inverse:
+            mask[ipix[np.abs(lat) < lat_cut]] = 1.
+        else:
+            mask[ipix[np.abs(lat) > lat_cut]] = 1.
+        return mask
+    
     if inverse:
         mask[np.abs(lat) >= lat_cut] = 0.
         valid_pix = ipix[np.abs(lat) < lat_cut]
+        
         x = ((lat_cut - np.abs(lat)[valid_pix]) / aposize)
         
     else:
@@ -69,7 +77,7 @@ def latitude_mask(nside, lat_cut, aposize, inverse=False):
 
 def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_apod=0., saturate=False):
     IorP_map = np.array(IorP_map)
-    
+
     if IorP_map.ndim > 1:
         raise Exception("ERROR: Too many dimensions for intensity/polarized intensity map. Aborting!")
         
