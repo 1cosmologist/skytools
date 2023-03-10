@@ -108,7 +108,7 @@ def apodize_mask(mask_in, aposize_in_deg, apotype="c2", tune=None):
     if apotype.lower() in ["c1", "sin"]:    
         # following definition from NaMaster C1 window definition, differing from Grain et al. 2009 definition
         apo_mask[x >= 1.] = 1.
-        apo_mask[x <  1.] = x - (np.sin(2 * np.pi * x[x <  1.]) / 2. / np.pi)
+        apo_mask[x <  1.] = x[x <  1.] - (np.sin(2 * np.pi * x[x <  1.]) / 2. / np.pi)
 
     if apotype.lower() in ["c2","cos"]: 
         # following definition from NaMaster C2 window definition, differing from Grain et al. 2009 definition
