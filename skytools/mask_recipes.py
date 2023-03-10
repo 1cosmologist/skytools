@@ -69,34 +69,35 @@ def latitude_mask(nside, lat_cut, aposize, inverse=False):
 
 def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_apod=0., saturate=False):
     IorP_map = np.array(IorP_map)
+    
     if IorP_map.ndim > 1:
-        print("ERROR: Too many dimensions for intensity/polarized intensity map. Aborting!")
-        exit()
+        raise Exception("ERROR: Too many dimensions for intensity/polarized intensity map. Aborting!")
+        
     npix = hp.nside2npix(nside)
     if smooth_in_deg is None:
         smooth_map = hp.ud_grade(IorP_map, nside)   #Assuming presmoothed
     elif smooth_in_deg > 0.:
-        smooth_map = hu.change_resolution(IorP_map, nside, mode='I', fwhm_out=smooth_in_deg*60.)
+        smooth_map = hu.change_resolution(IorP_map, nside, mode='i', fwhm_out=smooth_in_deg*60.)
 
     del IorP_map
 
     ipix_sorted = np.argsort(smooth_map)
-    mask = hp.zeros((npix,))
+
+    mask = np.zeros((npix,))
 
     if percent_apod > 0.:
         npix_keep = int(((100. - percent_masked - percent_apod) / 100.) * npix)
-        if npix_keep > 0:
-            mask[ipix_sorted[0:npix_keep]] = 1.
+        if npix_keep > 0: mask[ipix_sorted[0:npix_keep]] = 1.
+
         npix_apod = int((percent_apod / 100.) * npix)
-        if npix_apod > 0:
-            mask[ipix_sorted[npix_keep:npix_keep+npix_apod]] = np.cos(np.pi / 2. * np.arange(npix_apod) / npix_apod)
+
+        if npix_apod > 0: mask[ipix_sorted[npix_keep:npix_keep+npix_apod]] = np.cos(np.pi / 2. * np.arange(npix_apod) / npix_apod)
     else:
         npix_keep = int(((100. - percent_masked) / 100.) * npix)
-        if npix_keep > 0:
-            mask[ipix_sorted[0:npix_keep]] = 1.
+
+        if npix_keep > 0: mask[ipix_sorted[0:npix_keep]] = 1.
         
-        if saturate:
-            mask[ipix_sorted[npix_keep:npix_keep+npix]] = smooth_map[ipix_sorted[npix_keep]] / smooth_map[ipix_sorted[npix_keep:npix_keep+npix]]
+        if saturate: mask[ipix_sorted[npix_keep:npix_keep+npix]] = smooth_map[ipix_sorted[npix_keep]] / smooth_map[ipix_sorted[npix_keep:npix_keep+npix]]
     
     del smooth_map, ipix_sorted
     

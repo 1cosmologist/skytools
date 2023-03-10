@@ -129,8 +129,8 @@ def roll_bin_Cl(Cl_in, fmt_nmt=False):
     Cl_in = np.array(Cl_in)
 
     if Cl_in.ndim > 2:
-        print("ERROR: Upto 2-d Cl arrays supported in form [ndim, lmax+1]")
-        exit()
+        raise Exception("ERROR: Upto 2-d Cl arrays supported in form [ndim, lmax+1]")
+        
     elif Cl_in.ndim == 2:
         # Assume that Cl_in is [nmaps, lmax+1] in size
         lmax = len(Cl_in[0]) - 1
@@ -191,12 +191,10 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
     elif alm_in.ndim == 2:
         n_alms = alm_in.shape[0]
     else:
-        print("ERROR: The shape alm array is unrecognized. Aborting!")
-        exit()
+        raise Exception("ERROR: The shape alm array is unrecognized. Aborting!")
 
     if (mode.lower() in ['iqu', 'teb']) and (n_alms != 3):
-        print("ERROR: For IQU/TEB mode 3 alms are to be supplied. Aborting!")
-        exit()
+        raise Exception("ERROR: For IQU/TEB mode 3 alms are to be supplied. Aborting!")
 
 
     ALM = hp.Alm()
@@ -210,14 +208,13 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
         else: 
             nbeams_in = beam_in.shape[1]
             if nbeams_in != n_alms:
-                print("ERROR: Either supply same number of beams as alms or supply one to use for all. Aborting!")
-                exit()
+                raise Exception("ERROR: Either supply same number of beams as alms or supply one to use for all. Aborting!")
+                
         if len(beam_in) != lmax+1:
-                print("ERROR: beam_in must have same lmax as alm. Aborting!")
-                exit()
+                raise Exception("ERROR: beam_in must have same lmax as alm. Aborting!")
+                
         if (mode.lower() in ['iqu', 'teb']) and (nbeams_in != 3):
-            print("ERROR: For IQU/TEB mode 3 input beams are to be supplied. Aborting!")
-            exit()
+            raise Exception("ERROR: For IQU/TEB mode 3 input beams are to be supplied. Aborting!")
     else:
         if fwhm_in != None:
             beam_in = hp.gauss_beam(np.deg2rad(fwhm_in / 60.), lmax=lmax, pol=True)[:,:3]
@@ -226,12 +223,11 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
             if mode.lower() in ['i', 't']:
                 beam_in = beam_in[:,0]
                 nbeams_in = 1
-            if mode.lower() in ['e', 'b', 'eb']:
+            elif mode.lower() in ['e', 'b', 'eb']:
                 beam_in = beam_in[:,1]
                 nbeams_in = 1
             elif not (mode.lower() in ['iqu','teb']):
-                print("ERROR: Unrecognized mode! Only supported options={t, e, b, eb, i, qu, teb, iqu}. Aborting!")
-                exit()
+                raise Exception("ERROR: Unrecognized mode! Only supported options={t, e, b, eb, i, qu, teb, iqu}. Aborting!")
         else:
             beam_in = np.ones((lmax+1,))
             nbeams_in = 1
@@ -244,16 +240,13 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
         else: 
             nbeams_out = beam_out.shape[1]
             if nbeams_out != n_alms:
-                print("ERROR: Either supply same number of beams as alms or supply one to use for all. Aborting!")
-                exit()
+                raise Exception("ERROR: Either supply same number of beams as alms or supply one to use for all. Aborting!")
 
         if len(beam_out) != lmax+1:
-                print("ERROR: beam_out must have same lmax as alm. Aborting!")
-                exit()
+                raise Exception("ERROR: beam_out must have same lmax as alm. Aborting!")
 
         if (mode.lower() in ['iqu', 'teb']) and (nbeams_out != 3):
-            print("ERROR: For IQU/TEB mode 3 output beams are to be supplied. Aborting!")
-            exit()
+            raise Exception("ERROR: For IQU/TEB mode 3 output beams are to be supplied. Aborting!")
     else:
         if fwhm_out != None:
             beam_out = hp.gauss_beam(np.deg2rad(fwhm_out / 60.), lmax=lmax, pol=True)[:,:3]
@@ -262,12 +255,11 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
             if mode.lower() in ['i', 't']:
                 beam_out = beam_out[:,0]
                 nbeams_out = 1
-            if mode.lower() in ['e', 'b', 'eb',]:
+            elif mode.lower() in ['e', 'b', 'eb',]:
                 beam_out = beam_out[:,1]
                 nbeams_out = 1
             elif not (mode.lower() in ['iqu','teb']):
-                print("ERROR: Unrecognized mode! Only supported options={t, e, b, eb, i, teb, iqu}. Aborting!")
-                exit()
+                raise Exception("ERROR: Unrecognized mode! Only supported options={t, e, b, eb, i, teb, iqu}. Aborting!")
         else:
             beam_out = np.ones((lmax+1,))
             nbeams_out = 1
@@ -289,6 +281,8 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
 
         del alm_in, beam_factor, beam_in, beam_out
 
+        if n_alms == 1: return alm_out[0]
+
         return alm_out
     
     if n_alms > 1 and nbeams_in*nbeams_out > 1:
@@ -307,8 +301,7 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
         return alm_out
     
     else:
-        print("ERROR: Wrong number of beams given. Ensure nbeams_in >= nbeams_out and n_alms >= max(nbeams_in, nbeams_out). Aborting!")
-        exit()
+        raise Exception("ERROR: Wrong number of beams given. Ensure nbeams_in >= nbeams_out and n_alms >= max(nbeams_in, nbeams_out). Aborting!")
     
     
 def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None, pixwin_in=None, pixwin_out=None):
@@ -322,8 +315,7 @@ def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=N
         nmaps = len(map_to_grd[:,0])
 
     if (mode.lower() in ['iqu', 'teb']) and (nmaps != 3):
-        print("ERROR: NMAPS != 3 is wrong for mode TEB/IQU mode.")
-        exit()
+        raise Exception("ERROR: NMAPS != 3 is wrong for mode TEB/IQU mode.")
 
     if nside_out == None:
         nside_out = nside_in 
@@ -333,25 +325,27 @@ def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=N
     else:
         lmax = min(3 * min(nside_in, nside_out) - 1, lmax_sht)
 
-    if mode.lower() is 'iqu':
+    if (mode.lower() == 'iqu') or (nmaps == 1):
         alms = hp.map2alm(map_to_grd, lmax=lmax, use_weights=True, datapath=datapath)
-    if mode.lower() in ['i', 't', 'e', 'b', 'eb', 'teb']:
+    if (mode.lower() in ['i', 't', 'e', 'b', 'eb', 'teb']) and (nmaps > 1):
         alms = []
         for i in range(nmaps):
             alms.append(hp.map2alm(map_to_grd[i], lmax=lmax, use_weights=True, datapath=datapath))
-        alms = np.array(alms)
+    alms = np.array(alms)
 
     alms_out = process_alm(alms, mode=mode, fwhm_in=fwhm_in, fwhm_out=fwhm_out, beam_in=beam_in, beam_out=beam_out, pixwin_in=pixwin_in, pixwin_out=pixwin_out)
     
     del alms 
 
-    if mode.lower() is 'iqu':
+    if nmaps == 1:
+        maps_out = hp.alm2map(alms_out, nside_out, lmax=lmax, pol=False)
+    elif (mode.lower() == 'iqu'):
         maps_out = hp.alm2map(alms_out, nside_out, lmax=lmax, pol=True)
-    if mode.lower() in ['i', 't', 'e', 'b', 'eb', 'teb']:
+    elif (mode.lower() in ['i', 't', 'e', 'b', 'eb', 'teb']) and (nmaps > 1):
         maps_out = []
         for i in range(nmaps):
             maps_out.append(hp.alm2map(alms_out[i], nside_out, lmax=lmax, pol=True))
-        maps_out = np.array(maps_out)
+    maps_out = np.array(maps_out)
 
     return maps_out
 
@@ -383,8 +377,7 @@ def alm_fort2c(alm_in):
         lmax = len(alm_fort[:,0]) - 1
         mmax = len(alm_fort[0,:]) - 1
     else:
-        print("ERROR: Fortran-type alm has wrong dimensions. Only [nmaps, lmax, mmax] or [lmax, mmax] supported")
-        exit()
+        raise Exception("ERROR: Fortran-type alm has wrong dimensions. Only [nmaps, lmax, mmax] or [lmax, mmax] supported")
 
     ALM = hp.Alm()
     c_alm_size = ALM.getsize(lmax,mmax)
@@ -415,8 +408,7 @@ def alm_c2fort(alm_in):
     elif alm_dim == 1:
         midx = len(alm_c[:])
     else:
-        print("ERROR: C-type alm has wrong dimensions. Only [nmaps, midx] or [midx] supported")
-        exit()
+        raise Exception("ERROR: C-type alm has wrong dimensions. Only [nmaps, midx] or [midx] supported")
     
     ALM = hp.Alm()
     lmax = ALM.getlmax(midx)

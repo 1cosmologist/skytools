@@ -40,8 +40,7 @@ def maskdist(mask_in, dist_from_edge_in_rad):
     del border1_pix
 
     if np0 == 0:
-        print("ERROR: No masked pixels in the map! Abort!", np0)
-        exit()
+        raise Exception("ERROR: No masked pixels in the map! Abort!", np0)
               
     border_slice = 2500
     nparts = np0 // border_slice
@@ -58,7 +57,7 @@ def maskdist(mask_in, dist_from_edge_in_rad):
         npix_per_part = np.ones((nparts,)) * np0
 
     if np.sum(npix_per_part) != np0:
-        print("ERROR: npix_per_part sum does not match npix_0", np.sum(npix_per_part), np0)
+        raise Exception("ERROR: npix_per_part sum does not match npix_0", np.sum(npix_per_part), np0)
 
     start = int(0)
     stop = int(start+npix_per_part[0])
@@ -124,8 +123,7 @@ def apodize_mask(mask_in, aposize_in_deg, apotype="c2", tune=None):
         if tune == None:
             tune = 0.15
         if (tune < 0.) or (tune > 1.):
-            print("ERROR: Unphysical tune for MBH apodization. Choose 0<= tune <= 1. Aborting!")
-            exit()
+            raise Exception("ERROR: Unphysical tune for MBH apodization. Choose 0<= tune <= 1. Aborting!")
 
         apo_mask[x > 1.] = 1.
         apo_mask[x <=  1.] = 1. - tune*(1. - x[x <= 1.]) - (1. - tune)*(0.5 + 0.5*np.cos(np.pi*x[x <= 1.]))
@@ -136,8 +134,7 @@ def apodize_mask(mask_in, aposize_in_deg, apotype="c2", tune=None):
             tune = 4.
 
         if tune < 2:
-            print("ERROR: Unphysical tune for cosine^n apodization. Choose tune>=2. Aborting!")
-            exit()
+            raise Exception("ERROR: Unphysical tune for cosine^n apodization. Choose tune>=2. Aborting!")
 
         apo_mask[x > 1.] = 1.
         apo_mask[x <=  1.] = 1. - np.cos(0.5*np.pi*x[x <= 1.])**tune

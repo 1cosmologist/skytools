@@ -237,8 +237,7 @@ def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_mi
     """
     
     if np.array(alm_in).ndim != 1:
-        print("ERROR: Cannot needlet transform multiple maps.")
-        exit()
+        raise Exception("ERROR: Cannot needlet transform multiple maps.")
 
     lmin = 0
     lmax = len(bands[:,0]) - 1
@@ -334,8 +333,7 @@ def map2needlet(map_in, bands, needlet_nside=None, nodegrade=False, nlt_nside_mi
     """
 
     if np.array(map_in).ndim != 1:
-        print("ERROR: Cannot needlet transform multiple maps.")
-        exit()
+        raise Exception("ERROR: Cannot needlet transform multiple maps.")
 
     lmax_wv = len(bands[:,0])-1
     nside =  hp.npix2nside(len(map_in))
@@ -525,8 +523,7 @@ def read_needletmap_fits(infile, band_no=None):
             if band_no < nbands:
                 return np.array(hdulist[band_no+1].data['Band '+str(band_no)])
             else:
-                print("ERROR: band number exceeds number of bands in file.")
-                exit()
+                raise Exception("ERROR: band number exceeds number of bands in file.")
 
 def read_needletbands_fits(infile):
     """
