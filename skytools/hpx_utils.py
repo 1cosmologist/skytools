@@ -123,8 +123,6 @@ def calc_binned_Cl(alm1, alm2=None):
     return Cl_binned
 
 
-
-
 def roll_bin_Cl(Cl_in, fmt_nmt=False):
     Cl_in = np.array(Cl_in)
 

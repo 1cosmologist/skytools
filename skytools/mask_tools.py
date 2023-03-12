@@ -44,17 +44,18 @@ def maskdist(mask_in, dist_from_edge_in_rad):
               
     border_slice = 2500
     nparts = np0 // border_slice
-    if np.mod(np0, nparts) > 0.:
-        nparts += 1
-
-    npix_per_part = np.zeros((nparts,))
-    npix_per_part[:nparts-1] = border_slice
-
-    npix_per_part[nparts-1] = np0 - np.sum(npix_per_part)
 
     if nparts == 0:
         nparts = 1
         npix_per_part = np.ones((nparts,)) * np0
+    else:
+        if np.mod(np0, nparts) > 0.:
+            nparts += 1
+            
+        npix_per_part = np.zeros((nparts,))
+        npix_per_part[:nparts-1] = border_slice
+
+        npix_per_part[nparts-1] = np0 - np.sum(npix_per_part)
 
     if np.sum(npix_per_part) != np0:
         raise Exception("ERROR: npix_per_part sum does not match npix_0", np.sum(npix_per_part), np0)
