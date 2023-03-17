@@ -1,7 +1,7 @@
 #######################################################################
-# This file is a part of SkyToolsLib
+# This file is a part of SkyTools
 #
-# Sky Tools Library
+# Sky Tools
 # Copyright (C) 2023  Shamik Ghosh
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# For more information about CMBframe please visit 
-# <https://github.com/...> or contact Shamik Ghosh 
+# For more information about SkyTools please visit 
+# <https://github.com/1cosmologist/skytools> or contact Shamik Ghosh 
 # at shamik@lbl.gov
 #
 #########################################################################

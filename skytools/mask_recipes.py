@@ -1,7 +1,7 @@
 #######################################################################
-# This file is a part of SkyToolsLib
+# This file is a part of SkyTools
 #
-# Sky Tools Library
+# Sky Tools
 # Copyright (C) 2023  Shamik Ghosh
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# For more information about CMBframe please visit 
-# <https://github.com/...> or contact Shamik Ghosh 
+# For more information about SkyTools please visit 
+# <https://github.com/1cosmologist/skytools> or contact Shamik Ghosh 
 # at shamik@lbl.gov
 #
 #########################################################################
@@ -80,7 +80,7 @@ def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_
 
     if (percent_masked < 0.) or (percent_apod < 0.) :
         raise Exception("ERROR: Either percent_masked or percent_apod is set to negative. Aborting!")
-            
+
     if percent_masked + percent_apod > 100.:
         raise Exception("ERROR: Percentage masked and apodized adds to more than 100%, which is unphysical! Aborting.")
 
