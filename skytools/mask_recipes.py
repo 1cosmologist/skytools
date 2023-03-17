@@ -78,6 +78,12 @@ def latitude_mask(nside, lat_cut, aposize=None, inverse=False):
 def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_apod=0., saturate=False):
     IorP_map = np.array(IorP_map)
 
+    if (percent_masked < 0.) or (percent_apod < 0.) :
+        raise Exception("ERROR: Either percent_masked or percent_apod is set to negative. Aborting!")
+            
+    if percent_masked + percent_apod > 100.:
+        raise Exception("ERROR: Percentage masked and apodized adds to more than 100%, which is unphysical! Aborting.")
+
     if IorP_map.ndim > 1:
         raise Exception("ERROR: Too many dimensions for intensity/polarized intensity map. Aborting!")
         

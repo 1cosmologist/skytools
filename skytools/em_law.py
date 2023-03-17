@@ -27,7 +27,7 @@ of different emission components relevant to the CMB observations.
 import numpy as np
 import scipy.constants as con
 
-T_CMB = 2.7255 # K
+T_CMB = 2.72548 # K
 
 def B_nu_T(nu_in_GHz, T_planck=T_CMB):
     """
