@@ -284,7 +284,7 @@ def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_mi
         # print(nside_band, lmax_band)
 
         wavalm = hp.almxfl(np.copy(alm_in),needlet_bands[:,band])
-        needlet_maps.append(hp.alm2map(wavalm, nside_band, pol=False, verbose=False))
+        needlet_maps.append(hp.alm2map(wavalm, nside_band, pol=False))
 
         del lmax_band, nside_band, wavalm
 
@@ -441,7 +441,7 @@ def needlet2map(nside, nlt_map_in, bands, map_outfile=None):
     
     alm_temp = needlet2alm(nlt_map_in, bands)
 
-    map_out = hp.alm2map(alm_temp, nside, pol=False, verbose=False)
+    map_out = hp.alm2map(alm_temp, nside, pol=False)
 
     if map_outfile != None:
         hp.write_map(map_outfile, map_out, dtype=np.float64, overwrite=True)
@@ -485,7 +485,7 @@ def write_needletmap_fits(bands, nlt_map_in, outfile, unit=''):
         del tbhdu
 
     hdulist = fits.HDUList(hdulist)
-    hdulist.writeto(outfile, clobber=True)
+    hdulist.writeto(outfile, overwrite=True)
 
 def read_needletmap_fits(infile, band_no=None):
     """

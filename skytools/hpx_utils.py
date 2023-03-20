@@ -81,17 +81,17 @@ def iqu2teb(map_iqu, mask_in=None, teb='te', lmax_sht=None, return_alm=False):
         if return_alm:
             teb_maps.append(alms[0])
         else:
-            teb_maps.append(hp.alm2map(alms[0], nside, lmax=lmax_sht, pol=False, verbose=False) * mask_bin)
+            teb_maps.append(hp.alm2map(alms[0], nside, lmax=lmax_sht, pol=False) * mask_bin)
     if ('e' in teb) or ('E' in teb) :
         if return_alm:
             teb_maps.append(alms[1])
         else:
-            teb_maps.append(hp.alm2map(alms[1], nside, lmax=lmax_sht, pol=False, verbose=False) * mask_bin)
+            teb_maps.append(hp.alm2map(alms[1], nside, lmax=lmax_sht, pol=False) * mask_bin)
     if ('b' in teb) or ('B' in teb) :
         if return_alm:
             teb_maps.append(alms[2])
         else:
-            teb_maps.append(hp.alm2map(alms[2], nside, lmax=lmax_sht, pol=False, verbose=False) * mask_bin)
+            teb_maps.append(hp.alm2map(alms[2], nside, lmax=lmax_sht, pol=False) * mask_bin)
 
     return np.array(teb_maps)
 
