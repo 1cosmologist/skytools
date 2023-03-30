@@ -23,7 +23,7 @@
 
 project(
     'skytools',
-    version: '0.0.1.a3',
+    version: '0.0.1.a4',
     meson_version: '>=0.63.0',
     default_options: [
       # The default can yield broken results.
@@ -68,7 +68,8 @@ py_sources = [
     'skytools/hpx_utils.py',
     'skytools/mask_recipes.py',
     'skytools/mask_tools.py',
-    'skytools/needlet.py'
+    'skytools/needlet.py',
+    'skytools/unit_conversion.py'
 ]
 
 py3.install_sources(py_sources,

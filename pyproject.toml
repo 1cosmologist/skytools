@@ -27,7 +27,7 @@ requires = ['meson-python']
 
 [project]
 name = 'skytools'
-version = '0.0.1.a3'
+version = '0.0.1.a4'
 description = 'Python version of PSM tools for CMB data analysis.'
 readme = 'README.md'
 requires-python = '>=3.9'

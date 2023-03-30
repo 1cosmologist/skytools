@@ -190,9 +190,9 @@ def get_lmax_band(band, thresh=1.e-3):
     lmax = len(band) - 1
     lmax_band = np.max(np.where(band > 0)[0])
 
-    if lmax_band != lmax or band[lmax_band] < thresh:
+    if lmax_band != lmax or band[lmax_band] <= thresh:
         needlet_peak = np.min(np.where(band == np.max(band))[0])
-        lmax_band = needlet_peak - 1 + min(np.where(band[needlet_peak:] < thresh)[0])
+        lmax_band = needlet_peak - 1 + min(np.where(band[needlet_peak:] <= thresh)[0])
 
     return lmax_band
 
