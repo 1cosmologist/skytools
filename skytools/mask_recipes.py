@@ -26,16 +26,17 @@ import healpy as hp
 from . import hpx_utils as hu
 from . import mask_tools as mt
 
-def smalldisc_mask(nside, lon, lat, radius_in_deg, aposize=None):
+def smalldisc_mask(nside, lon, lat, radius, aposize=None):
+    
     npix = hp.nside2npix(nside)
     mask = np.zeros((npix,))
 
     vec_cen = np.array(hp.ang2vec(lon, lat, lonlat=True))
     if aposize == None:
-        mask[hp.query_disc(nside, vec_cen, np.deg2rad(radius_in_deg), inclusive=True)] = 1.
+        mask[hp.query_disc(nside, vec_cen, np.deg2rad(radius), inclusive=True)] = 1.
     else:
-        disc_pix, dist_pix = hu.query_dist(nside, vec_cen, np.deg2rad(radius_in_deg), inclusive=True)
-        x = ((np.deg2rad(radius_in_deg) - dist_pix) / np.deg2rad(aposize))
+        disc_pix, dist_pix = hu.query_dist(nside, vec_cen, np.deg2rad(radius), inclusive=True)
+        x = ((np.deg2rad(radius) - dist_pix) / np.deg2rad(aposize))
 
         del dist_pix
         mask[disc_pix[x >= 1.]] = 1.
