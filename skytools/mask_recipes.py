@@ -75,6 +75,54 @@ def latitude_mask(nside, lat_cut, aposize=None, inverse=False):
 
     return mask
 
+def galridge_mask(nside, lat_cut, lon_cut, aposize=None):
+    npix = hp.nside2npix(nside)
+    mask = np.zeros((npix,))
+
+    ipix = np.arange(npix)
+    lon, lat = hp.pix2ang(nside, ipix, lonlat=True)
+
+    lon[lon > 180] = 360. - lon[lon > 180]
+
+    if aposize == None:
+        
+        mask[ipix[(np.abs(lat) > lat_cut) | (np.abs(lon) > lon_cut)]] = 1.
+        return mask
+    
+    
+    mask[(np.abs(lat) <= lat_cut) & (np.abs(lon) <= lon_cut)] = 0.
+    valid_pix = ipix[(np.abs(lat) > lat_cut) & (np.abs(lon) <= lon_cut)]
+    x = ((np.abs(lat)[valid_pix] - lat_cut) / aposize)
+
+    mask[valid_pix[x >= 1.]] = 1.
+    mask[valid_pix[x < 1.]] = 0.5 * (1. - np.cos(np.pi * x[x <  1.]))
+
+    valid_pix = ipix[(np.abs(lat) <= lat_cut) & (np.abs(lon) > lon_cut)]
+    x = ((np.abs(lon)[valid_pix] - lon_cut) / aposize)
+
+    mask[valid_pix[x >= 1.]] = 1.
+    mask[valid_pix[x < 1.]] = 0.5 * (1. - np.cos(np.pi * x[x <  1.]))
+
+    valid_pix = ipix[(np.abs(lat) > lat_cut) & (np.abs(lon) > lon_cut)]
+    mask[valid_pix] = 1.
+
+    valid_pix = ipix[(np.abs(lat) > lat_cut) & (np.abs(lat) <= lat_cut+1.05*aposize) & (np.abs(lon) > lon_cut)]
+    corner_angs = np.array([[lon_cut, lat_cut],[lon_cut, -lat_cut], [360.-lon_cut, -lat_cut], [360.-lon_cut, lat_cut]])
+    corner_vecs = np.array(hp.ang2vec(corner_angs[:,0],corner_angs[:,1], lonlat=True), dtype=np.float32)
+    valid_pix_vecs = np.array(hp.pix2vec(nside, valid_pix), dtype=np.float32)
+
+    # print(corner_vecs.shape, valid_pix_vecs.shape)
+    dist = np.amin(np.arccos(corner_vecs @ valid_pix_vecs).astype(np.float32), axis=0)
+
+    del corner_angs, valid_pix_vecs
+    x = (dist / np.deg2rad(aposize))
+
+    mask[valid_pix[x >= 1.]] = 1.
+    mask[valid_pix[x < 1.]] = 0.5 * (1. - np.cos(np.pi * x[x <  1.]))
+
+    return mask
+
+
 def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_apod=0., saturate=False):
     IorP_map = np.array(IorP_map)
 
