@@ -277,7 +277,7 @@ def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_mi
             if needlet_nside != None:
                 nside = needlet_nside
             else:
-                nside = mt.ceil(mt.log2(lmax))
+                nside = int(2**(mt.ceil(mt.log2(lmax))))
 
             nside_band = nside 
 
