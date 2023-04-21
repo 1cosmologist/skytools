@@ -23,7 +23,7 @@
 
 project(
     'skytools',
-    version: '0.0.1.a8',
+    version: '0.0.1.a9',
     meson_version: '>=0.63.0',
     default_options: [
       # The default can yield broken results.
@@ -63,6 +63,7 @@ py3_dep = py3.dependency()
 
 py_sources = [
     'skytools/__init__.py',
+    'skytools/binning_utils.py',
     'skytools/border_finder.py',
     'skytools/em_law.py',
     'skytools/hpx_utils.py',
