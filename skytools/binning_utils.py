@@ -2,7 +2,7 @@ import numpy as np
 
 class bins:
     
-    def __init__(self, lmax_o, bsz_0=30, loglims=[[1.3]]):
+    def __init__(self, lmax_o, bsz_0=30, fixed_bins=False, loglims=[[1.3]]):
 # 
 # Set scaling as [scaling, lmax_scale] for each choice. 
 # If same scaling wanted for entire ell range set only scaling.
@@ -21,6 +21,9 @@ class bins:
             if i == 0:
                 ell_min_d = 2
                 ell_max_d = bsz_0
+            elif fixed_bins:
+                ell_min_d = ell_max_d + 1
+                ell_max_d = ell_min_d + bsz_0
             else :
                 ell_min_d = ell_max_d + 1
                 
