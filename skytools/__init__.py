@@ -1,3 +1,4 @@
+from .binning_utils import *
 from .border_finder import *
 from .em_law import *
 from .hpx_utils import *
