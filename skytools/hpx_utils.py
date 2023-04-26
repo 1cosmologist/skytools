@@ -288,10 +288,10 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
         beam_factor = np.zeros((lmax+1, max(nbeams_in, nbeams_out)))
         if nbeams_in == nbeams_out:
             for ibeam in range(nbeams_in):
-                beam_factor[:,i] = compute_beam_ratio(beam_in[:,ibeam], beam_out[:,ibeam])
+                beam_factor[:,ibeam] = compute_beam_ratio(beam_in[:,ibeam], beam_out[:,ibeam])
         elif (nbeams_in > nbeams_out) and (nbeams_out == 1):
             for ibeam in range(nbeams_in):
-                beam_factor[:,i] = compute_beam_ratio(beam_in[:,ibeam], beam_out)
+                beam_factor[:,ibeam] = compute_beam_ratio(beam_in[:,ibeam], beam_out)
         
         alm_out = np.zeros_like(alm_in)
         for i in range(n_alms):
