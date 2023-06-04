@@ -263,6 +263,7 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
             beam_out = np.ones((lmax+1,))
             nbeams_out = 1
 
+    # print(n_alms, beam_in.shape, beam_out.shape, alm_in.shape)
     if isinstance(pixwin_in, (int,float)):
         pixwin_in = hp.pixwin(int(pixwin_in), lmax=lmax)
         beam_in *= pixwin_in
@@ -293,9 +294,10 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
             for ibeam in range(nbeams_in):
                 beam_factor[:,ibeam] = compute_beam_ratio(beam_in[:,ibeam], beam_out)
         
+        # print(beam_factor.shape, beam_factor)
         alm_out = np.zeros_like(alm_in)
         for i in range(n_alms):
-            alm_out[i] = hp.almxfl(alm_in[i], beam_factor[i])
+            alm_out[i] = hp.almxfl(alm_in[i], beam_factor[:,i])
 
         return alm_out
     
