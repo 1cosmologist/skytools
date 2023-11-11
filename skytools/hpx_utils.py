@@ -145,7 +145,7 @@ def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
             limax = np.minimum(np.int(np.ceil(np.maximum((1+dlbyl/2)*li, li+(dl_min/2)))), lmax-1)
 
             if dl_max != None:
-                limin = np.minimum(limin, np.int(np.floor(li - (dl_max/2))))
+                limin = np.maximum(limin, np.int(np.floor(li - (dl_max/2))))
                 limax = np.minimum(limax, np.int(np.ceil(li + (dl_max/2))))
             # li = li - 2
             # if li < len(leff):
@@ -174,7 +174,7 @@ def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
             limax = np.minimum(np.int(np.ceil(np.maximum((1+dlbyl/2)*li, li+(dl_min/2)))), lmax-1)
 
             if dl_max != None:
-                limin = np.minimum(limin, np.int(np.floor(li - (dl_max/2))))
+                limin = np.maximum(limin, np.int(np.floor(li - (dl_max/2))))
                 limax = np.minimum(limax, np.int(np.ceil(li + (dl_max/2))))
             # li = li - 2
             # if li < len(leff):
