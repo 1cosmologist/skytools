@@ -30,6 +30,28 @@ datapath = os.getenv('SKYTOOLS_DATA')
 __pdoc__ = {}
 # __pdoc__[''] = False
 
+def apodized_gauss_beam(fwhm, lmax):
+    Bl = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax)
+
+    Bl_apo = np.copy(Bl)
+    dBl = np.gradient(Bl) 
+
+    ells = np.arange(lmax+1, dtype=np.int16)
+
+    ell_intercept = ells - Bl / dBl
+    # lmax_intercept = Bl + (lmax - ells) * dBl
+
+    if np.sum(ell_intercept <= lmax) > 0:
+        ell_0 = np.where(ell_intercept <= lmax)[0][-1]
+    else:
+        print('Warning: lmax is too small for a beam that size')
+        # dummy = np.min(lmax_intercept, ell_0)
+
+    tangent = Bl[ell_0] + (ells - ell_0) * dBl[ell_0]
+    Bl_apo[ell_0:] = tangent[ell_0:]
+    
+    return Bl_apo
+
 def compute_beam_ratio(beam_nu, beam_0):
     """
     Computes beam ratio to change the resolution/beam smoothing of a single map/alm.
