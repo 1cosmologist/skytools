@@ -64,8 +64,10 @@ def compute_beam_ratio(beam_nu, beam_0):
     return ratio_nu
 
 
-def iqu2teb(map_iqu, mask_in=None, teb='te', lmax_sht=None, return_alm=False):
-    nside = hp.get_nside(map_iqu[0])
+def iqu2teb(map_iqu, mask_in=None, nside=None, teb='te', lmax_sht=None, return_alm=False):
+    
+    if nside == None:
+        nside = hp.get_nside(map_iqu[0])
 
     if not isinstance(mask_in,(list, np.ndarray)):
         mask_in = np.ones_like((hp.nside2npix(nside),))
@@ -124,7 +126,7 @@ def calc_binned_Cl(alm1, alm2=None):
     return Cl_binned
 
 
-def roll_bin_Cl(Cl_in, fmt_nmt=False):
+def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
     Cl_in = np.array(Cl_in)
 
     if Cl_in.ndim > 2:
@@ -139,8 +141,12 @@ def roll_bin_Cl(Cl_in, fmt_nmt=False):
         Cl_binned = np.zeros((nmaps, lmax+1))
 
         for li in range(2, lmax+1) :
-            limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 2)
-            limax = np.minimum(np.int(np.ceil(np.maximum(1.2*li, li+5))), lmax-1)
+            limin = np.maximum(np.int(np.floor(np.minimum((1-dlbyl/2)*li, li-(dl_min/2)))), 2)
+            limax = np.minimum(np.int(np.ceil(np.maximum((1+dlbyl/2)*li, li+(dl_min/2)))), lmax-1)
+
+            if dl_max != None:
+                limin = np.minimum(limin, np.int(np.floor(li - (dl_max/2))))
+                limax = np.minimum(limax, np.int(np.ceil(li + (dl_max/2))))
             # li = li - 2
             # if li < len(leff):
             #     limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 0)
@@ -164,8 +170,12 @@ def roll_bin_Cl(Cl_in, fmt_nmt=False):
         Cl_binned = np.zeros((lmax+1,))
 
         for li in range(2, len(Cl_1x2)) :
-            limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 2)
-            limax = np.minimum(np.int(np.ceil(np.maximum(1.2*li, li+5))), lmax-1)
+            limin = np.maximum(np.int(np.floor(np.minimum((1-dlbyl/2)*li, li-(dl_min/2)))), 2)
+            limax = np.minimum(np.int(np.ceil(np.maximum((1+dlbyl/2)*li, li+(dl_min/2)))), lmax-1)
+
+            if dl_max != None:
+                limin = np.minimum(limin, np.int(np.floor(li - (dl_max/2))))
+                limax = np.minimum(limax, np.int(np.ceil(li + (dl_max/2))))
             # li = li - 2
             # if li < len(leff):
             #     limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 0)
@@ -178,8 +188,6 @@ def roll_bin_Cl(Cl_in, fmt_nmt=False):
             Cl_binned = np.reshape(Cl_binned,(1,len(Cl_binned)))
 
     return Cl_binned
-
-
 
 def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None, pixwin_in=None, pixwin_out=None, mode='i'):
     alm_in = np.array(alm_in)

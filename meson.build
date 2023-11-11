@@ -23,7 +23,7 @@
 
 project(
     'skytools',
-    version: '0.0.1.a11',
+    version: '0.0.1.b1',
     meson_version: '>=0.63.0',
     default_options: [
       # The default can yield broken results.

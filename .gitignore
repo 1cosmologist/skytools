@@ -2,3 +2,4 @@
 .mesonpy-native-file.ini
 .DS_store
 tests
+.gitignore
