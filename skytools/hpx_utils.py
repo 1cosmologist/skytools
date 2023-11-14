@@ -52,7 +52,7 @@ def apodized_gauss_beam(fwhm, lmax):
     
     return Bl_apo
 
-def compute_beam_ratio(beam_nu, beam_0):
+def compute_beam_ratio(beam_nu, beam_0, thresh=0.):
     """
     Computes beam ratio to change the resolution/beam smoothing of a single map/alm.
 
@@ -78,8 +78,7 @@ def compute_beam_ratio(beam_nu, beam_0):
 
     ratio_nu = np.zeros((lmax_beam))
 
-    lmax_nonzero = np.max(np.where(beam_nu>0.))+1
-    # print(lmax_nonzero)
+    lmax_nonzero = np.max(np.where(beam_nu>thresh))+1
     ratio_nu[0:lmax_nonzero] = beam_0[0:lmax_nonzero] / beam_nu[0:lmax_nonzero]
 
     del lmax_beam, lmax_nonzero, beam_nu, beam_0
