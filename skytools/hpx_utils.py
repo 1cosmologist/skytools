@@ -477,3 +477,18 @@ def angdist(nside1, pixlist1, nside2, pixlist2):
     return np.arccos(vec_mat1.T @ vec_mat2).astype(np.float32)
 
     
+def alm_c_lmaxchanger(lmax_i, lmax_f):
+    ALM = hp.Alm()
+    if lmax_i < lmax_f:
+        cidx_max = ALM.getsize(lmax_i)
+        ls, ms = ALM.getlm(lmax_i, np.arange(cidx_max, dtype=np.int64))
+        return ALM.getidx(lmax_f, ls, ms)
+    elif lmax_i > lmax_f:
+        cidx_max = ALM.getsize(lmax_i)
+        ls, ms = ALM.getlm(lmax_i, np.arange(cidx_max, dtype=np.int64))
+
+        ms = ms[ls <= lmax_f]
+        ls = ls[ls <= lmax_f]
+        return ALM.getidx(lmax_i, ls, ms)
+    else:
+        return ALM.getsize(lmax_i)
