@@ -166,3 +166,9 @@ def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_
     
     return mask
 
+def saturate_mask(mask_in, clip_val):
+    saturated_mask = np.copy(mask_in)
+    saturated_mask[saturated_mask >= clip_val] = 1.
+    saturated_mask[saturated_mask < clip_val] = saturated_mask[saturated_mask < clip_val] / clip_val
+
+    return saturated_mask
