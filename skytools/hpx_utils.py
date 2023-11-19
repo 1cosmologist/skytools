@@ -491,4 +491,4 @@ def alm_c_lmaxchanger(lmax_i, lmax_f):
         ls = ls[ls <= lmax_f]
         return ALM.getidx(lmax_i, ls, ms)
     else:
-        return ALM.getsize(lmax_i)
+        return np.arange(ALM.getsize(lmax_i), dtype=np.int64)
