@@ -133,8 +133,8 @@ def calc_binned_Cl(alm1, alm2=None):
     Cl_binned = np.zeros((lmax+1,))
 
     for li in range(2, len(Cl_1x2)) :
-            limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 2)
-            limax = np.minimum(np.int(np.ceil(np.maximum(1.2*li, li+5))), lmax-1)
+            limin = np.maximum(int(np.floor(np.minimum(0.8*li, li-5))), 2)
+            limax = np.minimum(int(np.ceil(np.maximum(1.2*li, li+5))), lmax-1)
             # li = li - 2
             # if li < len(leff):
             #     limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 0)
@@ -162,12 +162,12 @@ def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
         Cl_binned = np.zeros((nmaps, lmax+1))
 
         for li in range(2, lmax+1) :
-            limin = np.maximum(np.int(np.floor(np.minimum((1-dlbyl/2)*li, li-(dl_min/2)))), 2)
-            limax = np.minimum(np.int(np.ceil(np.maximum((1+dlbyl/2)*li, li+(dl_min/2)))), lmax-1)
+            limin = np.maximum((np.floor(np.minimum((1-dlbyl/2)*li, li-(dl_min/2)))), 2)
+            limax = np.minimum((np.ceil(np.maximum((1+dlbyl/2)*li, li+(dl_min/2)))), lmax-1)
 
             if dl_max != None:
-                limin = np.maximum(limin, np.int(np.floor(li - (dl_max/2))))
-                limax = np.minimum(limax, np.int(np.ceil(li + (dl_max/2))))
+                limin = np.maximum(limin, int(np.floor(li - (dl_max/2))))
+                limax = np.minimum(limax, int(np.ceil(li + (dl_max/2))))
             # li = li - 2
             # if li < len(leff):
             #     limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 0)
@@ -191,12 +191,12 @@ def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
         Cl_binned = np.zeros((lmax+1,))
 
         for li in range(2, len(Cl_1x2)) :
-            limin = np.maximum(np.int(np.floor(np.minimum((1-dlbyl/2)*li, li-(dl_min/2)))), 2)
-            limax = np.minimum(np.int(np.ceil(np.maximum((1+dlbyl/2)*li, li+(dl_min/2)))), lmax-1)
+            limin = np.maximum(int(np.floor(np.minimum((1-dlbyl/2)*li, li-(dl_min/2)))), 2)
+            limax = np.minimum(int(np.ceil(np.maximum((1+dlbyl/2)*li, li+(dl_min/2)))), lmax-1)
 
             if dl_max != None:
-                limin = np.maximum(limin, np.int(np.floor(li - (dl_max/2))))
-                limax = np.minimum(limax, np.int(np.ceil(li + (dl_max/2))))
+                limin = np.maximum(limin, int(np.floor(li - (dl_max/2))))
+                limax = np.minimum(limax, int(np.ceil(li + (dl_max/2))))
             # li = li - 2
             # if li < len(leff):
             #     limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 0)

@@ -90,7 +90,7 @@ def get_mask_border(mask_in, need_nos=False):
         np0 = len(p0)
         np1 = len(p1)
 
-    # For low number of holesvalid pixels:
+    # For low number of valid pixels:
 
     elif np.sum(mask_in) / len(mask_in) <= 5e-2:
 
