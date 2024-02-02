@@ -30,11 +30,11 @@ class bins:
                 for i in range(len(loglims)):
 
                     if len(loglims[i]) == 1:
-                        ell_max_d = np.int(np.maximum(ell_min_d + bsz_0, np.ceil(loglims[i][0] * ell_min_d)))
+                        ell_max_d = int(np.maximum(ell_min_d + bsz_0, np.ceil(loglims[i][0] * ell_min_d)))
                         break
                     elif len(loglims[i]) == 2:
                         if ell_min_d < loglims[i][1]:
-                            ell_max_d = np.int(np.maximum(ell_min_d + bsz_0, np.ceil(loglims[i][0] * ell_min_d)))
+                            ell_max_d = int(np.maximum(ell_min_d + bsz_0, np.ceil(loglims[i][0] * ell_min_d)))
                             break
 
             if ell_max_d > lmax_o:
@@ -42,7 +42,7 @@ class bins:
                 break
             else:
                 # ell_min.append(ell_min_d)
-                bin_sz.append(np.int(ell_max_d - ell_min_d + 1))
+                bin_sz.append(int(ell_max_d - ell_min_d + 1))
                 leff.append((ell_min_d + ell_max_d) / 2.)
                 # print(ell_min[i], ell_max_d, LL[i])
                 i = i + 1
