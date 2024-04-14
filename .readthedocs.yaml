@@ -2,7 +2,7 @@ version: 2
 build:
   os: "ubuntu-22.04"
   tools:
-    python: "miniconda-latest"
+    python: "mambaforge-22.9"
   commands:
     - conda config --add channels conda-forge
     - conda install numpy, healpy, astropy, joblib, pkg-config, scipy, meson
