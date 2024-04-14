@@ -5,4 +5,4 @@ build:
     python: "3.10"
   commands:
     - pip install pdoc3
-    - pdoc --html --output-dir _readthedocs/html skytools
+    - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
