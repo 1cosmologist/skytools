@@ -3,7 +3,6 @@ build:
   os: "ubuntu-22.04"
   tools:
     python: "3.10"
-    meson: "1.1.1"
   commands:
     - pip install pdoc3
     - pdoc --html --output-dir _readthedocs/html skytools
