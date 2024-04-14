@@ -1,0 +1,1428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>skytools.needlet API documentation</title>
+<meta name="description" content="CMBframe needlet transformation module provides functions and utilities
+to performs needlet transformation of data on a sphere. The module provides
+…" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>skytools.needlet</code></h1>
+</header>
+<section id="section-intro">
+<p>CMBframe needlet transformation module provides functions and utilities
+to performs needlet transformation of data on a sphere. The module provides
+setup of cosine and gaussian needlets bands and are used in conjunction with
+healpix sherical harmonic transformation of the data on the sphere.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#######################################################################
+# This file is a part of SkyTools
+#
+# Sky Tools
+# Copyright (C) 2023  Shamik Ghosh
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
+#
+# For more information about SkyTools please visit 
+# &lt;https://github.com/1cosmologist/skytools&gt; or contact Shamik Ghosh 
+# at shamik@lbl.gov
+#
+#########################################################################
+&#34;&#34;&#34;
+CMBframe needlet transformation module provides functions and utilities
+to performs needlet transformation of data on a sphere. The module provides
+setup of cosine and gaussian needlets bands and are used in conjunction with 
+healpix sherical harmonic transformation of the data on the sphere.
+&#34;&#34;&#34;
+
+import numpy as np 
+import healpy as hp
+import math as mt
+import astropy.io.fits as fits
+import os 
+
+datapath = os.getenv(&#39;SKYTOOLS_DATA&#39;)
+
+cos_band_center = [0, 30, 60, 100, 150, 300, 700, 1200, 2000]
+gauss_band_fwhm = [300., 150., 90., 60., 40., 20., 10.]
+__pdoc__ = {}
+__pdoc__[&#39;index_mapper&#39;] = False
+
+def cosine_bands(band_centers = cos_band_center):
+    &#34;&#34;&#34;
+    cosine_bands sets up cosine needlet bands for needlet transformations on a sphere.
+
+    You can visualize these bands using `plot_needlet_bands`.
+
+    Parameters
+    ----------
+    band_centers : list of int, optional 
+        A list of ell values where we want the cosine bands to peak.
+        Default is [0, 30, 60, 100, 150, 300, 700, 1200, 2000]
+
+    Notes
+    -----
+    The first needlet band is starts from a peak at the set value of ``band_centers[0]``.
+    All ells before ``band_centers[0]`` is included in the first needlet band with unit weights.
+    The last needlet should peak at lmax of your computation. So you would like to set 
+    ``band_centers[-1]`` to ``lmax`` in most calculations.
+
+    Returns
+    -------
+    numpy ndarray 
+        A 2D numpy array of shape = ``(np.max(band_centers)+1, len(band_centers))``.
+        ``np.max(band_centers)`` is ``lmax`` of the needlets and len(band_centers) is no. of needlet bands.
+    &#34;&#34;&#34;
+    
+    band_centers = np.array(band_centers)
+    lmax_band = np.max(band_centers)
+    nbands = len(band_centers)
+
+    cos_bands = np.zeros((lmax_band+1, nbands))
+
+    # C_m -&gt; denotes the band center for which we are computing
+    # C_l -&gt; denotes the band center just to the left of the current band
+    # C_r -&gt; denotes the band center just to the right of current band.
+
+    # For the first band:
+    C_m = band_centers[0]
+    C_r = band_centers[1]
+
+    # To the left of C_m for first band
+    if C_m &gt; 0 :
+        cos_bands[0:C_m+1, 0] = 1. 
+
+    # To the right of C_m for first band
+    ells = C_m + np.arange(C_r - C_m + 1, dtype=np.float64)
+    cos_bands[C_m:C_r+1,0] = np.cos((ells - C_m) / (C_r - C_m) * np.pi / 2.)
+
+    if nbands &gt; 2:
+        # Compute the cosine bands 1 to nbands-2
+        for band in range(1, nbands-1) :
+            C_l = band_centers[band-1]
+            C_m = band_centers[band]
+            C_r = band_centers[band+1]
+
+            # Left part of the band:
+            ells = C_l + np.arange(C_m - C_l + 1, dtype=np.float64)
+            cos_bands[C_l:C_m+1, band] = np.cos((C_m - ells ) / (C_m - C_l) * np.pi / 2.)
+
+            # Right part of the band:
+            ells = C_m + np.arange(C_r - C_m + 1, dtype=np.float64)
+            cos_bands[C_m:C_r+1, band] = np.cos((ells - C_m) / (C_r - C_m) * np.pi / 2.)
+        
+        # Compute cosine band for nbands-1 band:
+        C_l = band_centers[nbands-2]
+        C_m = band_centers[nbands-1]
+
+        # The last band only has the left part of the cosine
+        ells = C_l + np.arange(C_m - C_l + 1, dtype=np.float64)
+        cos_bands[C_l:C_m+1,nbands-1] = np.cos((C_m - ells) / (C_m - C_l) * np.pi / 2.) 
+
+    return cos_bands
+
+def gaussian_bands(fwhms=gauss_band_fwhm, lmax_band=None):
+    &#34;&#34;&#34;
+    gaussian_bands sets up gaussian needlet bands for needlet transformations on a sphere.
+
+    You can visualize these bands using `plot_needlet_bands`.
+
+    Parameters
+    ----------
+    fwhms : list of floats, optional
+        A list of fwhm values in arcmin of the different gaussian needlet map resolutions. 
+        Defaults is [300., 150., 90., 60., 40., 20., 10.]
+    lmax_band : int, optional 
+        It is recommended to set this to the lmax using in the computation.
+        Default is ``int(360.* 60./ np.min(fwhms))``
+
+    Notes
+    -----
+    The number of gaussian needlet bands produced is 1 more than the number of fwhms
+    set. The final band is there to pick up the residual weight after needlet weights for 
+    all the gaussian bands.
+
+    Returns
+    -------
+    numpy ndarray
+        A 2D numpy array of shape = ``(lmax_band+1, len(fwhms) + 1)``. 
+        ``nbands=len(fwhms)+1`` is no. of needlet bands.
+    &#34;&#34;&#34;    
+    
+    fwhms = np.array(fwhms)
+    sorted_fwhms = np.sort(fwhms)[::-1]
+    nbands = len(fwhms) + 1
+
+    if lmax_band == None:
+        lmax_band = int(360.* 60./ np.min(fwhms))
+
+    gauss_bands = np.zeros((lmax_band+1, nbands))
+
+    # First band:
+    gauss_bands[:,0] = hp.gauss_beam(np.deg2rad(sorted_fwhms[0]/60.), lmax=lmax_band)**2.
+
+    # Intermediate bands:
+    if nbands &gt; 2:
+        for band in range(1,nbands-1):
+            gauss_bands[:,band] = hp.gauss_beam(np.deg2rad(sorted_fwhms[band]/60.), lmax=lmax_band)**2. -\
+                hp.gauss_beam(np.deg2rad(sorted_fwhms[band-1]/60.), lmax=lmax_band)**2.
+    
+    # Last band:
+    gauss_bands[:,nbands-1] = 1. - hp.gauss_beam(np.deg2rad(sorted_fwhms[nbands-2]/60.), lmax=lmax_band)**2.
+
+    gauss_bands = np.sqrt(gauss_bands)
+
+    return gauss_bands
+
+def get_lmax_band(band, thresh=1.e-3):
+    &#34;&#34;&#34;
+    Returns the highest ell value where a needlet band is 0.1% of its peak.
+
+    Parameters
+    ----------
+    band : numpy array
+        A 1D numpy array containing the needlet band. Typically ``needlets[:,i]`` 
+        slice for the ith needlet band.
+
+    Notes
+    -----
+    This function is meant to find the maximum lmax contributing to a needlet
+    band. This is set to 5% to deal with the long tail of the gaussian needlets.
+    
+    Returns
+    -------
+    int
+        An integer value for the nonzero lmax of the needlet band.
+    &#34;&#34;&#34;
+    
+    lmax = len(band) - 1
+    lmax_band = np.max(np.where(band &gt; 0)[0])
+
+    if lmax_band != lmax or band[lmax_band] &lt;= thresh:
+        needlet_peak = np.min(np.where(band == np.max(band))[0])
+        lmax_band = needlet_peak - 1 + min(np.where(band[needlet_peak:] &lt;= thresh)[0])
+
+    return lmax_band
+
+def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_min=None, nlt_nside_max=None):
+    &#34;&#34;&#34;
+    Performs needlet transform from input spherical harmonic coefficient (alm) of a map.
+
+    Parameters
+    ----------
+    alm_in : numpy array
+        A 1D numpy array of alm for a map obtained from healpy.
+        Does not support multicomponent maps. For polarization 
+        input should be either \(a^E_{\\ell m}\) or \(a^B_{\\ell m}\).
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)&#39;&#39; conatining 
+        needlet bands
+    nodegrade : bool, optional
+        Sets if all needlet scale maps have the same nside.
+        If True then you can set the common nside for all scales 
+        with needlet_nside. If nside not specified, the common 
+        nside for all scales is set by: math.ceil(math.log2(lmax)),
+        with lmax determined from needlet bands.
+    needlet_nside : int, optional
+        Nside of needlet maps at all bands. Default is None.
+    nlt_nside_min : int, optional
+        Minimum nside for any needlet scale maps. Default is None.
+    nlt_nside_max : int, optional
+        Maximum nside for any needlet scale maps. Default is None.
+
+    Notes
+    -----
+    When nside is not set by user the nside of each needlet scale map 
+    is 2^n such that ``2^n &gt;= lmax_band`` (n is integer). The ``lmax_band`` is
+    obtained by calling `get_lmax_band`. 
+
+    Returns
+    -------
+    list
+        A list of healpix maps is returned. There will be nband healpix
+        maps as 1D numpy arrays. If all maps are not set to have the same
+        nside, do not convert the whole list of maps to a numpy ndarray.
+    &#34;&#34;&#34;
+    
+    if np.array(alm_in).ndim != 1:
+        raise Exception(&#34;ERROR: Cannot needlet transform multiple maps.&#34;)
+
+    lmin = 0
+    lmax = len(bands[:,0]) - 1
+
+    ALM = hp.Alm()
+    lmax_sht = ALM.getlmax(len(alm_in))
+
+    nbands = len(bands[0,:])
+
+    # if lmax &gt; lmax_sht:
+    #     needlet_bands = np.copy(bands[:lmax_sht+1,:nbands]) 
+    #     print(&#34;Note bands have higher lmax than alms. Some needlets may have no information&#34;)
+    # else :
+    needlet_bands = np.copy(bands)
+
+    nside_opts = np.array([1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192]) 
+
+    needlet_maps = []
+    for band in range(nbands):
+
+        lmax_band = get_lmax_band(needlet_bands[:, band])
+
+        # # lmax_band = np.max(np.where(needlet_bands[:,band] &gt; 0))
+        # lmax_band = np.max(np.where(needlet_bands[:,band] &gt; 0)[0])
+        # # print(lmax_band)
+        # if lmax_band != lmax or needlet_bands[lmax_band,band] &lt; 5.e-2:
+        #     needlet_peak = np.min(np.where(needlet_bands[:,band] == np.max(needlet_bands[:,band]))[0])
+        #     lmax_band = min(np.where(needlet_bands[needlet_peak:,band] &lt; 5.e-2)[0])
+        
+        if not nodegrade:
+            nside_band = np.min(nside_opts[nside_opts &gt;= lmax_band])
+            if nlt_nside_min != None :
+                if nside_band &lt; nlt_nside_min : nside_band = nlt_nside_min
+            if nlt_nside_max != None :
+                if nside_band &gt; nlt_nside_max : nside_band = nlt_nside_max 
+        else :
+            if needlet_nside != None:
+                nside = needlet_nside
+            else:
+                nside = int(2**(mt.ceil(mt.log2(lmax))))
+
+            nside_band = nside 
+
+        # print(nside_band, lmax_band)
+
+        wavalm = hp.almxfl(np.copy(alm_in),needlet_bands[:,band])
+        needlet_maps.append(hp.alm2map(wavalm, nside_band, pol=False))
+
+        del lmax_band, nside_band, wavalm
+
+    del alm_in, bands
+    return needlet_maps
+
+def map2needlet(map_in, bands, needlet_nside=None, nodegrade=False, nlt_nside_min=None, nlt_nside_max=None):
+    &#34;&#34;&#34;
+    Performs needlet transform from input healpix map. This
+    is a map level wrapper for alm2needlet function.
+
+    Parameters
+    ----------
+    map_in : numpy array
+        A 1D numpy array for a healpix map. Does not support 
+        multicomponent maps. For polarization input should be 
+        either E or B mode scalar map. Does not support IQU maps.
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining 
+        needlet bands
+    nodegrade : bool, optional
+        Sets if all needlet scale maps have the same nside.
+        If True then you can set the common nside for all scales 
+        with needlet_nside. If nside not specified, the common 
+        nside for all scales is set by: \(\\lceil \\log_2(\ell_{\\rm max}) \\rceil \),
+        with lmax determined from needlet bands.
+    needlet_nside : int, optional
+        Nside of needlet maps at all bands. Default is None.
+    nlt_nside_min : int, optional
+        Minimum nside for any needlet scale maps. Default is None.
+    nlt_nside_max : int, optional
+        Maximum nside for any needlet scale maps. Default is None.
+
+    Notes
+    -----
+    When nside is not set by user the nside of each needlet scale map 
+    is 2^n such that ``2^n &gt;= lmax_band`` (n is integer). The ``lmax_band`` is
+    obtained by calling get_lmax_band. 
+
+    Returns
+    -------
+    list
+        A list of healpix maps is returned. There will be nband healpix
+        maps as 1D numpy arrays. If all maps are not set to have the same
+        nside, do not convert the whole list of maps to a numpy ndarray.
+    &#34;&#34;&#34;
+
+    if np.array(map_in).ndim != 1:
+        raise Exception(&#34;ERROR: Cannot needlet transform multiple maps.&#34;)
+
+    lmax_wv = len(bands[:,0])-1
+    nside =  hp.npix2nside(len(map_in))
+    lmax_map = 3*nside - 1
+
+    if lmax_wv &gt; lmax_map:
+        print(&#34;WARNING: lmax of needlet bands exceeds map lmax limit.&#34;)
+        lmax_sht = lmax_map
+    else:
+        lmax_sht = lmax_wv
+
+    alm_temp = hp.map2alm(map_in, lmax=lmax_sht, pol=False, use_weights=True, datapath=datapath)
+
+    needlet_map = alm2needlet(alm_temp, bands, needlet_nside=needlet_nside, nodegrade=nodegrade, nlt_nside_min=nlt_nside_min, nlt_nside_max=nlt_nside_max)
+
+    del alm_temp
+
+    return needlet_map
+
+def index_mapper(lmax_i, lmax_f, idx_i):
+    ALM = hp.Alm()
+    l, m = ALM.getlm(lmax_i,idx_i)
+    idx_f = ALM.getidx(lmax_f, l, m)
+    del ALM, l, m 
+
+    return idx_f
+
+def needlet2alm(nlt_map_in, bands):
+    &#34;&#34;&#34;
+    Converts needlet maps back to spherical harmonic coefficients (alm).
+
+    Parameters
+    ----------
+    nlt_map_in : list
+        A list of healpix maps. One map for each needlet band. Each healpix
+        map is a numpy 1D array. The nside of the map is determined from the 
+        length of the map array. Partial maps not supported.
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
+        used to produce the needlet scale maps. number of maps must match nbands.
+
+
+    Returns
+    -------
+    numpy array
+        A numpy 1D array of output spherical harmonic coefficients are returned.
+        The alm array is indexed in healpix C/python format. The output alm is 
+        compatible with healpy SHTs.
+    &#34;&#34;&#34;
+
+    nbands = len(bands[0,:])
+    lmax_wv = len(bands[:,0])-1
+
+    ALM = hp.Alm()
+    sz = ALM.getsize(lmax_wv)
+
+    alm_out = np.zeros((sz,), dtype=np.complex128)
+
+    map_index = np.vectorize(index_mapper, otypes=[np.int64])
+
+    for band in range(nbands):
+        lmax_band = get_lmax_band(bands[:,band])
+
+        # print(nlt_map_in[band].shape, band)
+        alm_band = hp.map2alm(np.copy(nlt_map_in[band]),lmax=lmax_band, pol=False, use_weights=True, datapath=datapath)
+        
+        idx_arr = np.arange(len(alm_band),dtype=np.int64)
+        idx_map = map_index(lmax_band, lmax_wv, idx_arr)
+
+        alm_out[idx_map] = alm_out[idx_map] + hp.almxfl(alm_band, bands[:lmax_band+1,band])
+
+        del alm_band, idx_map, idx_arr
+
+    del ALM, nbands, lmax_wv
+
+    return alm_out
+
+def needlet2map(nside, nlt_map_in, bands, map_outfile=None):
+    &#34;&#34;&#34;
+    Converts needlet maps back to single healpix map combining all needlet scales.
+    This is a wrapper for needlet2alm function.
+
+    Parameters
+    ----------
+    nside : int
+        Healpix nside parameter of the final output map. Sets the pixel density
+        of the output map. Valid inputs are integer powers of 2 &lt;= 8192.
+    nlt_map_in : list
+        A list of healpix maps. One map for each needlet band. Each healpix
+        map is a numpy 1D array. The nside of the map is determined from the 
+        length of the map array. Partial maps not supported.
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
+        used to produce the needlet scale maps. number of maps must match nbands.
+    map_outfile : str, optional
+        Output filename, with path, to save the output map as fits file. Only
+        valid file extension is fits.
+
+    Returns
+    -------
+    numpy array
+        A numpy 1D array of a healpix map representing the combined information from
+        all needlet scales. This map will have the nside set in the input.
+    &#34;&#34;&#34;
+    
+    alm_temp = needlet2alm(nlt_map_in, bands)
+
+    map_out = hp.alm2map(alm_temp, nside, pol=False)
+
+    if map_outfile != None:
+        hp.write_map(map_outfile, map_out, dtype=np.float64, overwrite=True)
+
+    return map_out
+
+def write_needletmap_fits(bands, nlt_map_in, outfile, unit=&#39;&#39;):
+    &#34;&#34;&#34;
+    Writes needlet maps and corresponding needlet band information to a fits file.
+
+    Paramaters
+    ----------
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
+        used to produce the needlet scale maps. Number of maps must match nbands.
+    nlt_map_in : list
+        A list of healpix maps. One map for each needlet band. Each healpix
+        map is a numpy 1D array. 
+    outfile : str
+        Output filename, with path, to save the input needlet bands and needlet maps 
+        as fits file. Only valid file extension is fits. This file is meant to read 
+        with read_needletbands_fits and read_needletmap_fits.
+    unit : str, optional
+        Set the units of the output map.
+
+    Notes
+    -----
+    Saves the needlet bands in the PrimaryHDU of the fits file. Saves the needlet maps
+    as a BinTableHDU with each map as a new column. 
+    &#34;&#34;&#34;
+
+    # hdr_P = fits.Header()
+    # hdr_P[&#39;nbands&#39;] = 
+
+    hdu_P = fits.PrimaryHDU(bands)
+    hdulist = [hdu_P]
+    for i in range(len(bands[0,:])):
+        tbhdu = fits.BinTableHDU.from_columns([fits.Column(name=&#39;Band &#39;+str(i), unit=unit, format=&#39;D&#39;, array=nlt_map_in[i])])
+        hdulist.append(tbhdu)
+
+        del tbhdu
+
+    hdulist = fits.HDUList(hdulist)
+    hdulist.writeto(outfile, overwrite=True)
+
+def read_needletmap_fits(infile, band_no=None):
+    &#34;&#34;&#34;
+    Reads needlet map(s) contained in the BintableHDU of a fits file created with
+    write_needletmap_fits. 
+
+    Paramaters
+    ----------
+    infile : str
+        Input filename, with path, to read the needlet scale maps from a fits file. 
+        Only valid file extension is fits. Must be created with write_needletmap_fits.
+    band_no : int, optional
+        Specifies the needlet scale map to fetch by number. Goes from 1 to nbands.
+        Default is None.
+    Returns
+    -------
+    list or numpy array
+        If band_no is set to None, returns a list of healpix maps. One map for each 
+        needlet band. Each healpix map is a numpy 1D array. If band_no is specified, 
+        returns the healpix map as a numpy 1D array.
+    &#34;&#34;&#34;
+    
+    with fits.open(infile) as hdulist:
+        needlets = np.array(hdulist[0].data)
+
+        nbands = len(needlets[0,:])
+
+        if band_no == None:
+            wav_maps = []
+            for i in range(1, nbands+1):
+                wav_maps.append(np.array(hdulist[i].data[&#39;Band &#39;+str(i-1)]))
+
+            return wav_maps
+        else:
+            if band_no &lt; nbands:
+                return np.array(hdulist[band_no+1].data[&#39;Band &#39;+str(band_no)])
+            else:
+                raise Exception(&#34;ERROR: band number exceeds number of bands in file.&#34;)
+
+def read_needletbands_fits(infile):
+    &#34;&#34;&#34;
+    Reads needlet band information contained in PrimaryHDU of a fits file created with
+    write_needletmap_fits.
+
+    Paramaters
+    ----------
+    infile : str
+        Input filename, with path, to read the needlet bands from a fits file. 
+        Only valid file extension is fits. Must be created with write_needletmap_fits.
+
+    Returns
+    -------
+    numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
+        used to produce the needlet scale maps contained in the file.
+    &#34;&#34;&#34;
+    
+    with fits.open(infile) as hdulist:
+        return np.array(hdulist[0].data)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="skytools.needlet.alm2needlet"><code class="name flex">
+<span>def <span class="ident">alm2needlet</span></span>(<span>alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_min=None, nlt_nside_max=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Performs needlet transform from input spherical harmonic coefficient (alm) of a map.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>alm_in</code></strong> :&ensp;<code>numpy array</code></dt>
+<dd>A 1D numpy array of alm for a map obtained from healpy.
+Does not support multicomponent maps. For polarization
+input should be either (a^E_{\ell m}) or (a^B_{\ell m}).</dd>
+<dt><strong><code>bands</code></strong> :&ensp;<code>numpy ndarray</code></dt>
+<dd>A 2D numpy array of shape ``(lmax+1, nbands)'' conatining
+needlet bands</dd>
+<dt><strong><code>nodegrade</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Sets if all needlet scale maps have the same nside.
+If True then you can set the common nside for all scales
+with needlet_nside. If nside not specified, the common
+nside for all scales is set by: math.ceil(math.log2(lmax)),
+with lmax determined from needlet bands.</dd>
+<dt><strong><code>needlet_nside</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Nside of needlet maps at all bands. Default is None.</dd>
+<dt><strong><code>nlt_nside_min</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Minimum nside for any needlet scale maps. Default is None.</dd>
+<dt><strong><code>nlt_nside_max</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Maximum nside for any needlet scale maps. Default is None.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>When nside is not set by user the nside of each needlet scale map
+is 2^n such that <code>2^n &gt;= lmax_band</code> (n is integer). The <code>lmax_band</code> is
+obtained by calling <code><a title="skytools.needlet.get_lmax_band" href="#skytools.needlet.get_lmax_band">get_lmax_band()</a></code>. </p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>A list of healpix maps is returned. There will be nband healpix
+maps as 1D numpy arrays. If all maps are not set to have the same
+nside, do not convert the whole list of maps to a numpy ndarray.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_min=None, nlt_nside_max=None):
+    &#34;&#34;&#34;
+    Performs needlet transform from input spherical harmonic coefficient (alm) of a map.
+
+    Parameters
+    ----------
+    alm_in : numpy array
+        A 1D numpy array of alm for a map obtained from healpy.
+        Does not support multicomponent maps. For polarization 
+        input should be either \(a^E_{\\ell m}\) or \(a^B_{\\ell m}\).
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)&#39;&#39; conatining 
+        needlet bands
+    nodegrade : bool, optional
+        Sets if all needlet scale maps have the same nside.
+        If True then you can set the common nside for all scales 
+        with needlet_nside. If nside not specified, the common 
+        nside for all scales is set by: math.ceil(math.log2(lmax)),
+        with lmax determined from needlet bands.
+    needlet_nside : int, optional
+        Nside of needlet maps at all bands. Default is None.
+    nlt_nside_min : int, optional
+        Minimum nside for any needlet scale maps. Default is None.
+    nlt_nside_max : int, optional
+        Maximum nside for any needlet scale maps. Default is None.
+
+    Notes
+    -----
+    When nside is not set by user the nside of each needlet scale map 
+    is 2^n such that ``2^n &gt;= lmax_band`` (n is integer). The ``lmax_band`` is
+    obtained by calling `get_lmax_band`. 
+
+    Returns
+    -------
+    list
+        A list of healpix maps is returned. There will be nband healpix
+        maps as 1D numpy arrays. If all maps are not set to have the same
+        nside, do not convert the whole list of maps to a numpy ndarray.
+    &#34;&#34;&#34;
+    
+    if np.array(alm_in).ndim != 1:
+        raise Exception(&#34;ERROR: Cannot needlet transform multiple maps.&#34;)
+
+    lmin = 0
+    lmax = len(bands[:,0]) - 1
+
+    ALM = hp.Alm()
+    lmax_sht = ALM.getlmax(len(alm_in))
+
+    nbands = len(bands[0,:])
+
+    # if lmax &gt; lmax_sht:
+    #     needlet_bands = np.copy(bands[:lmax_sht+1,:nbands]) 
+    #     print(&#34;Note bands have higher lmax than alms. Some needlets may have no information&#34;)
+    # else :
+    needlet_bands = np.copy(bands)
+
+    nside_opts = np.array([1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192]) 
+
+    needlet_maps = []
+    for band in range(nbands):
+
+        lmax_band = get_lmax_band(needlet_bands[:, band])
+
+        # # lmax_band = np.max(np.where(needlet_bands[:,band] &gt; 0))
+        # lmax_band = np.max(np.where(needlet_bands[:,band] &gt; 0)[0])
+        # # print(lmax_band)
+        # if lmax_band != lmax or needlet_bands[lmax_band,band] &lt; 5.e-2:
+        #     needlet_peak = np.min(np.where(needlet_bands[:,band] == np.max(needlet_bands[:,band]))[0])
+        #     lmax_band = min(np.where(needlet_bands[needlet_peak:,band] &lt; 5.e-2)[0])
+        
+        if not nodegrade:
+            nside_band = np.min(nside_opts[nside_opts &gt;= lmax_band])
+            if nlt_nside_min != None :
+                if nside_band &lt; nlt_nside_min : nside_band = nlt_nside_min
+            if nlt_nside_max != None :
+                if nside_band &gt; nlt_nside_max : nside_band = nlt_nside_max 
+        else :
+            if needlet_nside != None:
+                nside = needlet_nside
+            else:
+                nside = int(2**(mt.ceil(mt.log2(lmax))))
+
+            nside_band = nside 
+
+        # print(nside_band, lmax_band)
+
+        wavalm = hp.almxfl(np.copy(alm_in),needlet_bands[:,band])
+        needlet_maps.append(hp.alm2map(wavalm, nside_band, pol=False))
+
+        del lmax_band, nside_band, wavalm
+
+    del alm_in, bands
+    return needlet_maps</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.cosine_bands"><code class="name flex">
+<span>def <span class="ident">cosine_bands</span></span>(<span>band_centers=[0, 30, 60, 100, 150, 300, 700, 1200, 2000])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>cosine_bands sets up cosine needlet bands for needlet transformations on a sphere.</p>
+<p>You can visualize these bands using <code>plot_needlet_bands</code>.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>band_centers</code></strong> :&ensp;<code>list</code> of <code>int</code>, optional</dt>
+<dd>A list of ell values where we want the cosine bands to peak.
+Default is [0, 30, 60, 100, 150, 300, 700, 1200, 2000]</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>The first needlet band is starts from a peak at the set value of <code>band_centers[0]</code>.
+All ells before <code>band_centers[0]</code> is included in the first needlet band with unit weights.
+The last needlet should peak at lmax of your computation. So you would like to set
+<code>band_centers[-1]</code> to <code>lmax</code> in most calculations.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>numpy ndarray </code></dt>
+<dd>A 2D numpy array of shape = <code>(np.max(band_centers)+1, len(band_centers))</code>.
+<code>np.max(band_centers)</code> is <code>lmax</code> of the needlets and len(band_centers) is no. of needlet bands.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cosine_bands(band_centers = cos_band_center):
+    &#34;&#34;&#34;
+    cosine_bands sets up cosine needlet bands for needlet transformations on a sphere.
+
+    You can visualize these bands using `plot_needlet_bands`.
+
+    Parameters
+    ----------
+    band_centers : list of int, optional 
+        A list of ell values where we want the cosine bands to peak.
+        Default is [0, 30, 60, 100, 150, 300, 700, 1200, 2000]
+
+    Notes
+    -----
+    The first needlet band is starts from a peak at the set value of ``band_centers[0]``.
+    All ells before ``band_centers[0]`` is included in the first needlet band with unit weights.
+    The last needlet should peak at lmax of your computation. So you would like to set 
+    ``band_centers[-1]`` to ``lmax`` in most calculations.
+
+    Returns
+    -------
+    numpy ndarray 
+        A 2D numpy array of shape = ``(np.max(band_centers)+1, len(band_centers))``.
+        ``np.max(band_centers)`` is ``lmax`` of the needlets and len(band_centers) is no. of needlet bands.
+    &#34;&#34;&#34;
+    
+    band_centers = np.array(band_centers)
+    lmax_band = np.max(band_centers)
+    nbands = len(band_centers)
+
+    cos_bands = np.zeros((lmax_band+1, nbands))
+
+    # C_m -&gt; denotes the band center for which we are computing
+    # C_l -&gt; denotes the band center just to the left of the current band
+    # C_r -&gt; denotes the band center just to the right of current band.
+
+    # For the first band:
+    C_m = band_centers[0]
+    C_r = band_centers[1]
+
+    # To the left of C_m for first band
+    if C_m &gt; 0 :
+        cos_bands[0:C_m+1, 0] = 1. 
+
+    # To the right of C_m for first band
+    ells = C_m + np.arange(C_r - C_m + 1, dtype=np.float64)
+    cos_bands[C_m:C_r+1,0] = np.cos((ells - C_m) / (C_r - C_m) * np.pi / 2.)
+
+    if nbands &gt; 2:
+        # Compute the cosine bands 1 to nbands-2
+        for band in range(1, nbands-1) :
+            C_l = band_centers[band-1]
+            C_m = band_centers[band]
+            C_r = band_centers[band+1]
+
+            # Left part of the band:
+            ells = C_l + np.arange(C_m - C_l + 1, dtype=np.float64)
+            cos_bands[C_l:C_m+1, band] = np.cos((C_m - ells ) / (C_m - C_l) * np.pi / 2.)
+
+            # Right part of the band:
+            ells = C_m + np.arange(C_r - C_m + 1, dtype=np.float64)
+            cos_bands[C_m:C_r+1, band] = np.cos((ells - C_m) / (C_r - C_m) * np.pi / 2.)
+        
+        # Compute cosine band for nbands-1 band:
+        C_l = band_centers[nbands-2]
+        C_m = band_centers[nbands-1]
+
+        # The last band only has the left part of the cosine
+        ells = C_l + np.arange(C_m - C_l + 1, dtype=np.float64)
+        cos_bands[C_l:C_m+1,nbands-1] = np.cos((C_m - ells) / (C_m - C_l) * np.pi / 2.) 
+
+    return cos_bands</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.gaussian_bands"><code class="name flex">
+<span>def <span class="ident">gaussian_bands</span></span>(<span>fwhms=[300.0, 150.0, 90.0, 60.0, 40.0, 20.0, 10.0], lmax_band=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>gaussian_bands sets up gaussian needlet bands for needlet transformations on a sphere.</p>
+<p>You can visualize these bands using <code>plot_needlet_bands</code>.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>fwhms</code></strong> :&ensp;<code>list</code> of <code>floats</code>, optional</dt>
+<dd>A list of fwhm values in arcmin of the different gaussian needlet map resolutions.
+Defaults is [300., 150., 90., 60., 40., 20., 10.]</dd>
+<dt><strong><code>lmax_band</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>It is recommended to set this to the lmax using in the computation.
+Default is <code>int(360.* 60./ np.min(fwhms))</code></dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>The number of gaussian needlet bands produced is 1 more than the number of fwhms
+set. The final band is there to pick up the residual weight after needlet weights for
+all the gaussian bands.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>numpy ndarray</code></dt>
+<dd>A 2D numpy array of shape = <code>(lmax_band+1, len(fwhms) + 1)</code>.
+<code>nbands=len(fwhms)+1</code> is no. of needlet bands.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gaussian_bands(fwhms=gauss_band_fwhm, lmax_band=None):
+    &#34;&#34;&#34;
+    gaussian_bands sets up gaussian needlet bands for needlet transformations on a sphere.
+
+    You can visualize these bands using `plot_needlet_bands`.
+
+    Parameters
+    ----------
+    fwhms : list of floats, optional
+        A list of fwhm values in arcmin of the different gaussian needlet map resolutions. 
+        Defaults is [300., 150., 90., 60., 40., 20., 10.]
+    lmax_band : int, optional 
+        It is recommended to set this to the lmax using in the computation.
+        Default is ``int(360.* 60./ np.min(fwhms))``
+
+    Notes
+    -----
+    The number of gaussian needlet bands produced is 1 more than the number of fwhms
+    set. The final band is there to pick up the residual weight after needlet weights for 
+    all the gaussian bands.
+
+    Returns
+    -------
+    numpy ndarray
+        A 2D numpy array of shape = ``(lmax_band+1, len(fwhms) + 1)``. 
+        ``nbands=len(fwhms)+1`` is no. of needlet bands.
+    &#34;&#34;&#34;    
+    
+    fwhms = np.array(fwhms)
+    sorted_fwhms = np.sort(fwhms)[::-1]
+    nbands = len(fwhms) + 1
+
+    if lmax_band == None:
+        lmax_band = int(360.* 60./ np.min(fwhms))
+
+    gauss_bands = np.zeros((lmax_band+1, nbands))
+
+    # First band:
+    gauss_bands[:,0] = hp.gauss_beam(np.deg2rad(sorted_fwhms[0]/60.), lmax=lmax_band)**2.
+
+    # Intermediate bands:
+    if nbands &gt; 2:
+        for band in range(1,nbands-1):
+            gauss_bands[:,band] = hp.gauss_beam(np.deg2rad(sorted_fwhms[band]/60.), lmax=lmax_band)**2. -\
+                hp.gauss_beam(np.deg2rad(sorted_fwhms[band-1]/60.), lmax=lmax_band)**2.
+    
+    # Last band:
+    gauss_bands[:,nbands-1] = 1. - hp.gauss_beam(np.deg2rad(sorted_fwhms[nbands-2]/60.), lmax=lmax_band)**2.
+
+    gauss_bands = np.sqrt(gauss_bands)
+
+    return gauss_bands</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.get_lmax_band"><code class="name flex">
+<span>def <span class="ident">get_lmax_band</span></span>(<span>band, thresh=0.001)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the highest ell value where a needlet band is 0.1% of its peak.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>band</code></strong> :&ensp;<code>numpy array</code></dt>
+<dd>A 1D numpy array containing the needlet band. Typically <code>needlets[:,i]</code>
+slice for the ith needlet band.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>This function is meant to find the maximum lmax contributing to a needlet
+band. This is set to 5% to deal with the long tail of the gaussian needlets.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>An integer value for the nonzero lmax of the needlet band.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_lmax_band(band, thresh=1.e-3):
+    &#34;&#34;&#34;
+    Returns the highest ell value where a needlet band is 0.1% of its peak.
+
+    Parameters
+    ----------
+    band : numpy array
+        A 1D numpy array containing the needlet band. Typically ``needlets[:,i]`` 
+        slice for the ith needlet band.
+
+    Notes
+    -----
+    This function is meant to find the maximum lmax contributing to a needlet
+    band. This is set to 5% to deal with the long tail of the gaussian needlets.
+    
+    Returns
+    -------
+    int
+        An integer value for the nonzero lmax of the needlet band.
+    &#34;&#34;&#34;
+    
+    lmax = len(band) - 1
+    lmax_band = np.max(np.where(band &gt; 0)[0])
+
+    if lmax_band != lmax or band[lmax_band] &lt;= thresh:
+        needlet_peak = np.min(np.where(band == np.max(band))[0])
+        lmax_band = needlet_peak - 1 + min(np.where(band[needlet_peak:] &lt;= thresh)[0])
+
+    return lmax_band</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.map2needlet"><code class="name flex">
+<span>def <span class="ident">map2needlet</span></span>(<span>map_in, bands, needlet_nside=None, nodegrade=False, nlt_nside_min=None, nlt_nside_max=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Performs needlet transform from input healpix map. This
+is a map level wrapper for alm2needlet function.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>map_in</code></strong> :&ensp;<code>numpy array</code></dt>
+<dd>A 1D numpy array for a healpix map. Does not support
+multicomponent maps. For polarization input should be
+either E or B mode scalar map. Does not support IQU maps.</dd>
+<dt><strong><code>bands</code></strong> :&ensp;<code>numpy ndarray</code></dt>
+<dd>A 2D numpy array of shape <code>(lmax+1, nbands)</code> conatining
+needlet bands</dd>
+<dt><strong><code>nodegrade</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Sets if all needlet scale maps have the same nside.
+If True then you can set the common nside for all scales
+with needlet_nside. If nside not specified, the common
+nside for all scales is set by: (\lceil \log_2(\ell_{\rm max}) \rceil ),
+with lmax determined from needlet bands.</dd>
+<dt><strong><code>needlet_nside</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Nside of needlet maps at all bands. Default is None.</dd>
+<dt><strong><code>nlt_nside_min</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Minimum nside for any needlet scale maps. Default is None.</dd>
+<dt><strong><code>nlt_nside_max</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Maximum nside for any needlet scale maps. Default is None.</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>When nside is not set by user the nside of each needlet scale map
+is 2^n such that <code>2^n &gt;= lmax_band</code> (n is integer). The <code>lmax_band</code> is
+obtained by calling get_lmax_band. </p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>A list of healpix maps is returned. There will be nband healpix
+maps as 1D numpy arrays. If all maps are not set to have the same
+nside, do not convert the whole list of maps to a numpy ndarray.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def map2needlet(map_in, bands, needlet_nside=None, nodegrade=False, nlt_nside_min=None, nlt_nside_max=None):
+    &#34;&#34;&#34;
+    Performs needlet transform from input healpix map. This
+    is a map level wrapper for alm2needlet function.
+
+    Parameters
+    ----------
+    map_in : numpy array
+        A 1D numpy array for a healpix map. Does not support 
+        multicomponent maps. For polarization input should be 
+        either E or B mode scalar map. Does not support IQU maps.
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining 
+        needlet bands
+    nodegrade : bool, optional
+        Sets if all needlet scale maps have the same nside.
+        If True then you can set the common nside for all scales 
+        with needlet_nside. If nside not specified, the common 
+        nside for all scales is set by: \(\\lceil \\log_2(\ell_{\\rm max}) \\rceil \),
+        with lmax determined from needlet bands.
+    needlet_nside : int, optional
+        Nside of needlet maps at all bands. Default is None.
+    nlt_nside_min : int, optional
+        Minimum nside for any needlet scale maps. Default is None.
+    nlt_nside_max : int, optional
+        Maximum nside for any needlet scale maps. Default is None.
+
+    Notes
+    -----
+    When nside is not set by user the nside of each needlet scale map 
+    is 2^n such that ``2^n &gt;= lmax_band`` (n is integer). The ``lmax_band`` is
+    obtained by calling get_lmax_band. 
+
+    Returns
+    -------
+    list
+        A list of healpix maps is returned. There will be nband healpix
+        maps as 1D numpy arrays. If all maps are not set to have the same
+        nside, do not convert the whole list of maps to a numpy ndarray.
+    &#34;&#34;&#34;
+
+    if np.array(map_in).ndim != 1:
+        raise Exception(&#34;ERROR: Cannot needlet transform multiple maps.&#34;)
+
+    lmax_wv = len(bands[:,0])-1
+    nside =  hp.npix2nside(len(map_in))
+    lmax_map = 3*nside - 1
+
+    if lmax_wv &gt; lmax_map:
+        print(&#34;WARNING: lmax of needlet bands exceeds map lmax limit.&#34;)
+        lmax_sht = lmax_map
+    else:
+        lmax_sht = lmax_wv
+
+    alm_temp = hp.map2alm(map_in, lmax=lmax_sht, pol=False, use_weights=True, datapath=datapath)
+
+    needlet_map = alm2needlet(alm_temp, bands, needlet_nside=needlet_nside, nodegrade=nodegrade, nlt_nside_min=nlt_nside_min, nlt_nside_max=nlt_nside_max)
+
+    del alm_temp
+
+    return needlet_map</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.needlet2alm"><code class="name flex">
+<span>def <span class="ident">needlet2alm</span></span>(<span>nlt_map_in, bands)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts needlet maps back to spherical harmonic coefficients (alm).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>nlt_map_in</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of healpix maps. One map for each needlet band. Each healpix
+map is a numpy 1D array. The nside of the map is determined from the
+length of the map array. Partial maps not supported.</dd>
+<dt><strong><code>bands</code></strong> :&ensp;<code>numpy ndarray</code></dt>
+<dd>A 2D numpy array of shape <code>(lmax+1, nbands)</code> conatining needlet bands
+used to produce the needlet scale maps. number of maps must match nbands.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>numpy array</code></dt>
+<dd>A numpy 1D array of output spherical harmonic coefficients are returned.
+The alm array is indexed in healpix C/python format. The output alm is
+compatible with healpy SHTs.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def needlet2alm(nlt_map_in, bands):
+    &#34;&#34;&#34;
+    Converts needlet maps back to spherical harmonic coefficients (alm).
+
+    Parameters
+    ----------
+    nlt_map_in : list
+        A list of healpix maps. One map for each needlet band. Each healpix
+        map is a numpy 1D array. The nside of the map is determined from the 
+        length of the map array. Partial maps not supported.
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
+        used to produce the needlet scale maps. number of maps must match nbands.
+
+
+    Returns
+    -------
+    numpy array
+        A numpy 1D array of output spherical harmonic coefficients are returned.
+        The alm array is indexed in healpix C/python format. The output alm is 
+        compatible with healpy SHTs.
+    &#34;&#34;&#34;
+
+    nbands = len(bands[0,:])
+    lmax_wv = len(bands[:,0])-1
+
+    ALM = hp.Alm()
+    sz = ALM.getsize(lmax_wv)
+
+    alm_out = np.zeros((sz,), dtype=np.complex128)
+
+    map_index = np.vectorize(index_mapper, otypes=[np.int64])
+
+    for band in range(nbands):
+        lmax_band = get_lmax_band(bands[:,band])
+
+        # print(nlt_map_in[band].shape, band)
+        alm_band = hp.map2alm(np.copy(nlt_map_in[band]),lmax=lmax_band, pol=False, use_weights=True, datapath=datapath)
+        
+        idx_arr = np.arange(len(alm_band),dtype=np.int64)
+        idx_map = map_index(lmax_band, lmax_wv, idx_arr)
+
+        alm_out[idx_map] = alm_out[idx_map] + hp.almxfl(alm_band, bands[:lmax_band+1,band])
+
+        del alm_band, idx_map, idx_arr
+
+    del ALM, nbands, lmax_wv
+
+    return alm_out</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.needlet2map"><code class="name flex">
+<span>def <span class="ident">needlet2map</span></span>(<span>nside, nlt_map_in, bands, map_outfile=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts needlet maps back to single healpix map combining all needlet scales.
+This is a wrapper for needlet2alm function.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>nside</code></strong> :&ensp;<code>int</code></dt>
+<dd>Healpix nside parameter of the final output map. Sets the pixel density
+of the output map. Valid inputs are integer powers of 2 &lt;= 8192.</dd>
+<dt><strong><code>nlt_map_in</code></strong> :&ensp;<code>list</code></dt>
+<dd>A list of healpix maps. One map for each needlet band. Each healpix
+map is a numpy 1D array. The nside of the map is determined from the
+length of the map array. Partial maps not supported.</dd>
+<dt><strong><code>bands</code></strong> :&ensp;<code>numpy ndarray</code></dt>
+<dd>A 2D numpy array of shape <code>(lmax+1, nbands)</code> conatining needlet bands
+used to produce the needlet scale maps. number of maps must match nbands.</dd>
+<dt><strong><code>map_outfile</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Output filename, with path, to save the output map as fits file. Only
+valid file extension is fits.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>numpy array</code></dt>
+<dd>A numpy 1D array of a healpix map representing the combined information from
+all needlet scales. This map will have the nside set in the input.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def needlet2map(nside, nlt_map_in, bands, map_outfile=None):
+    &#34;&#34;&#34;
+    Converts needlet maps back to single healpix map combining all needlet scales.
+    This is a wrapper for needlet2alm function.
+
+    Parameters
+    ----------
+    nside : int
+        Healpix nside parameter of the final output map. Sets the pixel density
+        of the output map. Valid inputs are integer powers of 2 &lt;= 8192.
+    nlt_map_in : list
+        A list of healpix maps. One map for each needlet band. Each healpix
+        map is a numpy 1D array. The nside of the map is determined from the 
+        length of the map array. Partial maps not supported.
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
+        used to produce the needlet scale maps. number of maps must match nbands.
+    map_outfile : str, optional
+        Output filename, with path, to save the output map as fits file. Only
+        valid file extension is fits.
+
+    Returns
+    -------
+    numpy array
+        A numpy 1D array of a healpix map representing the combined information from
+        all needlet scales. This map will have the nside set in the input.
+    &#34;&#34;&#34;
+    
+    alm_temp = needlet2alm(nlt_map_in, bands)
+
+    map_out = hp.alm2map(alm_temp, nside, pol=False)
+
+    if map_outfile != None:
+        hp.write_map(map_outfile, map_out, dtype=np.float64, overwrite=True)
+
+    return map_out</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.read_needletbands_fits"><code class="name flex">
+<span>def <span class="ident">read_needletbands_fits</span></span>(<span>infile)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Reads needlet band information contained in PrimaryHDU of a fits file created with
+write_needletmap_fits.</p>
+<h2 id="paramaters">Paramaters</h2>
+<p>infile : str
+Input filename, with path, to read the needlet bands from a fits file.
+Only valid file extension is fits. Must be created with write_needletmap_fits.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>numpy ndarray</code></dt>
+<dd>A 2D numpy array of shape <code>(lmax+1, nbands)</code> conatining needlet bands
+used to produce the needlet scale maps contained in the file.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_needletbands_fits(infile):
+    &#34;&#34;&#34;
+    Reads needlet band information contained in PrimaryHDU of a fits file created with
+    write_needletmap_fits.
+
+    Paramaters
+    ----------
+    infile : str
+        Input filename, with path, to read the needlet bands from a fits file. 
+        Only valid file extension is fits. Must be created with write_needletmap_fits.
+
+    Returns
+    -------
+    numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
+        used to produce the needlet scale maps contained in the file.
+    &#34;&#34;&#34;
+    
+    with fits.open(infile) as hdulist:
+        return np.array(hdulist[0].data)</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.read_needletmap_fits"><code class="name flex">
+<span>def <span class="ident">read_needletmap_fits</span></span>(<span>infile, band_no=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Reads needlet map(s) contained in the BintableHDU of a fits file created with
+write_needletmap_fits. </p>
+<h2 id="paramaters">Paramaters</h2>
+<p>infile : str
+Input filename, with path, to read the needlet scale maps from a fits file.
+Only valid file extension is fits. Must be created with write_needletmap_fits.
+band_no : int, optional
+Specifies the needlet scale map to fetch by number. Goes from 1 to nbands.
+Default is None.
+Returns</p>
+<hr>
+<dl>
+<dt><code>list</code> or <code>numpy array</code></dt>
+<dd>If band_no is set to None, returns a list of healpix maps. One map for each
+needlet band. Each healpix map is a numpy 1D array. If band_no is specified,
+returns the healpix map as a numpy 1D array.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_needletmap_fits(infile, band_no=None):
+    &#34;&#34;&#34;
+    Reads needlet map(s) contained in the BintableHDU of a fits file created with
+    write_needletmap_fits. 
+
+    Paramaters
+    ----------
+    infile : str
+        Input filename, with path, to read the needlet scale maps from a fits file. 
+        Only valid file extension is fits. Must be created with write_needletmap_fits.
+    band_no : int, optional
+        Specifies the needlet scale map to fetch by number. Goes from 1 to nbands.
+        Default is None.
+    Returns
+    -------
+    list or numpy array
+        If band_no is set to None, returns a list of healpix maps. One map for each 
+        needlet band. Each healpix map is a numpy 1D array. If band_no is specified, 
+        returns the healpix map as a numpy 1D array.
+    &#34;&#34;&#34;
+    
+    with fits.open(infile) as hdulist:
+        needlets = np.array(hdulist[0].data)
+
+        nbands = len(needlets[0,:])
+
+        if band_no == None:
+            wav_maps = []
+            for i in range(1, nbands+1):
+                wav_maps.append(np.array(hdulist[i].data[&#39;Band &#39;+str(i-1)]))
+
+            return wav_maps
+        else:
+            if band_no &lt; nbands:
+                return np.array(hdulist[band_no+1].data[&#39;Band &#39;+str(band_no)])
+            else:
+                raise Exception(&#34;ERROR: band number exceeds number of bands in file.&#34;)</code></pre>
+</details>
+</dd>
+<dt id="skytools.needlet.write_needletmap_fits"><code class="name flex">
+<span>def <span class="ident">write_needletmap_fits</span></span>(<span>bands, nlt_map_in, outfile, unit='')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Writes needlet maps and corresponding needlet band information to a fits file.</p>
+<h2 id="paramaters">Paramaters</h2>
+<p>bands : numpy ndarray
+A 2D numpy array of shape <code>(lmax+1, nbands)</code> conatining needlet bands
+used to produce the needlet scale maps. Number of maps must match nbands.
+nlt_map_in : list
+A list of healpix maps. One map for each needlet band. Each healpix
+map is a numpy 1D array.
+outfile : str
+Output filename, with path, to save the input needlet bands and needlet maps
+as fits file. Only valid file extension is fits. This file is meant to read
+with read_needletbands_fits and read_needletmap_fits.
+unit : str, optional
+Set the units of the output map.</p>
+<h2 id="notes">Notes</h2>
+<p>Saves the needlet bands in the PrimaryHDU of the fits file. Saves the needlet maps
+as a BinTableHDU with each map as a new column.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_needletmap_fits(bands, nlt_map_in, outfile, unit=&#39;&#39;):
+    &#34;&#34;&#34;
+    Writes needlet maps and corresponding needlet band information to a fits file.
+
+    Paramaters
+    ----------
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
+        used to produce the needlet scale maps. Number of maps must match nbands.
+    nlt_map_in : list
+        A list of healpix maps. One map for each needlet band. Each healpix
+        map is a numpy 1D array. 
+    outfile : str
+        Output filename, with path, to save the input needlet bands and needlet maps 
+        as fits file. Only valid file extension is fits. This file is meant to read 
+        with read_needletbands_fits and read_needletmap_fits.
+    unit : str, optional
+        Set the units of the output map.
+
+    Notes
+    -----
+    Saves the needlet bands in the PrimaryHDU of the fits file. Saves the needlet maps
+    as a BinTableHDU with each map as a new column. 
+    &#34;&#34;&#34;
+
+    # hdr_P = fits.Header()
+    # hdr_P[&#39;nbands&#39;] = 
+
+    hdu_P = fits.PrimaryHDU(bands)
+    hdulist = [hdu_P]
+    for i in range(len(bands[0,:])):
+        tbhdu = fits.BinTableHDU.from_columns([fits.Column(name=&#39;Band &#39;+str(i), unit=unit, format=&#39;D&#39;, array=nlt_map_in[i])])
+        hdulist.append(tbhdu)
+
+        del tbhdu
+
+    hdulist = fits.HDUList(hdulist)
+    hdulist.writeto(outfile, overwrite=True)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="skytools" href="index.html">skytools</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="skytools.needlet.alm2needlet" href="#skytools.needlet.alm2needlet">alm2needlet</a></code></li>
+<li><code><a title="skytools.needlet.cosine_bands" href="#skytools.needlet.cosine_bands">cosine_bands</a></code></li>
+<li><code><a title="skytools.needlet.gaussian_bands" href="#skytools.needlet.gaussian_bands">gaussian_bands</a></code></li>
+<li><code><a title="skytools.needlet.get_lmax_band" href="#skytools.needlet.get_lmax_band">get_lmax_band</a></code></li>
+<li><code><a title="skytools.needlet.map2needlet" href="#skytools.needlet.map2needlet">map2needlet</a></code></li>
+<li><code><a title="skytools.needlet.needlet2alm" href="#skytools.needlet.needlet2alm">needlet2alm</a></code></li>
+<li><code><a title="skytools.needlet.needlet2map" href="#skytools.needlet.needlet2map">needlet2map</a></code></li>
+<li><code><a title="skytools.needlet.read_needletbands_fits" href="#skytools.needlet.read_needletbands_fits">read_needletbands_fits</a></code></li>
+<li><code><a title="skytools.needlet.read_needletmap_fits" href="#skytools.needlet.read_needletmap_fits">read_needletmap_fits</a></code></li>
+<li><code><a title="skytools.needlet.write_needletmap_fits" href="#skytools.needlet.write_needletmap_fits">write_needletmap_fits</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
