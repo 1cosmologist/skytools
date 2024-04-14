@@ -4,6 +4,7 @@ build:
   tools:
     python: "miniconda-latest"
   commands:
+    - conda config --add channels conda-forge
     - conda install numpy, healpy, astropy, joblib, pkg-config, scipy, meson
     - pip install pdoc3
     - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
