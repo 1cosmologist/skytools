@@ -3,8 +3,8 @@ build:
   os: "ubuntu-22.04"
   tools:
     python: "mambaforge-22.9"
+  conda:
+    environment: environment.yml
   commands:
-    - conda config --add channels conda-forge
-    - conda install numpy, healpy, astropy, joblib, pkg-config, scipy, meson
     - pip install pdoc3
     - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
