@@ -3,8 +3,10 @@ build:
   os: "ubuntu-22.04"
   tools:
     python: "mambaforge-22.9"
-  conda:
-    environment: environment.yml
+
   commands:
     - pip install pdoc3
     - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
+    
+conda:
+  environment: environment.yml
