@@ -4,7 +4,7 @@ build:
   tools:
     python: "mambaforge-22.9"
   conda:
-    environment: "environment.yml"
+    environment: environment.yml
   commands:
     - pip install pdoc3
     - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
