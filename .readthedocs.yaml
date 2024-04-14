@@ -3,8 +3,7 @@ build:
   os: "ubuntu-22.04"
   tools:
     python: "miniconda-latest"
-  conda:
-    environment: uEnv.yml
   commands:
+    - conda install numpy, healpy, astropy, joblib, pkg-config, scipy, meson
     - pip install pdoc3
     - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
