@@ -1,0 +1,7 @@
+numpy, 
+astropy, 
+healpy, 
+scipy, 
+joblib, 
+pkg-config, 
+meson, 

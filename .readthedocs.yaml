@@ -1,9 +1,15 @@
 version: 2
+
+python:
+  install:
+    - requirements: requirements.txt
+    - method: pip
+
 build:
   os: "ubuntu-22.04"
   tools:
     python: "3.10"
 
   commands:
-    - pip install numpy, astropy, healpy, scipy, joblib, pkg-config, meson, pdoc3
+    - pip install pdoc3
     - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
