@@ -6,7 +6,7 @@ build:
     python: "3.10"
 
   commands:
-    # - pip install pdoc3
+    - pip install numpy, astropy, healpy, scipy, joblib, pkg-config, meson,pdoc3
     - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html
 
 # Explicitly set the version of Python and its requirements
