@@ -6,13 +6,13 @@ build:
     python: "3.10"
 
   commands:
-    - pip3 install numpy
-    - pip3 install astropy
-    - pip3 install healpy
-    - pip3 install scipy 
-    - pip3 install joblib
-    - pip3 install pdoc3
-    - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html
+    - pip install numpy
+    - pip install astropy
+    - pip install healpy
+    - pip install scipy 
+    - pip install joblib
+    - pip install pdoc3
+    - pdoc --html --output-dir $READTHEDOCS_OUTPUT skytools
 
 # Explicitly set the version of Python and its requirements
 python:
