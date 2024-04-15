@@ -8,12 +8,12 @@ build:
   commands:
     - export READTHEDOCS_OUTPUT=_readthedocs
     - pip install numpy
-    # - pip install astropy
-    # - pip install healpy
-    # - pip install scipy 
-    # - pip install joblib
+    - pip install astropy
+    - pip install healpy
+    - pip install scipy 
+    - pip install joblib
     - pip install pdoc3
-    - pdoc --html --output-dir $READTHEDOCS_OUTPUT --skip-errors skytools
+    - pdoc --html --output-dir $READTHEDOCS_OUTPUT skytools
     - mv $READTHEDOCS_OUTPUT/skytools $READTHEDOCS_OUTPUT/html
 
 # Explicitly set the version of Python and its requirements
