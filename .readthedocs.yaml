@@ -7,7 +7,7 @@ build:
 
   commands:
     - export READTHEDOCS_OUTPUT=_readthedocs
-    # - pip install numpy
+    - pip install numpy
     # - pip install astropy
     # - pip install healpy
     # - pip install scipy 
