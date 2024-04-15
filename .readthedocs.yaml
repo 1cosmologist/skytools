@@ -2,12 +2,8 @@ version: 2
 build:
   os: "ubuntu-22.04"
   tools:
-    python: "miniconda-latest"
+    python: "3.10"
 
-  jobs:
-    post_install:
-      - pip install pdoc3
-      - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
-
-conda:
-  environment: environment.yml
+  commands:
+    - pip install numpy, astropy, healpy, scipy, joblib, pkg-config, meson, pdoc3
+    - pdoc --html --output-dir $READTHEDOCS_OUTPUT/html skytools
