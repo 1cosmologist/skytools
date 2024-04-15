@@ -11,6 +11,6 @@ build:
 
 # Explicitly set the version of Python and its requirements
 python:
-  install:
+  - install:
     - requirements: ./requirements.txt
     - method: pip
