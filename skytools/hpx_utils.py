@@ -424,6 +424,10 @@ def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=N
     -------
     numpy ndarray
         Returns a numpy ndarray for output maps. Shape of output : ``(nmaps, npix_out)`` or ``(npix_out,)``.
+
+    See also
+    --------
+    ``process_alm``
     """
     map_to_grd = np.array(map_in)
 
