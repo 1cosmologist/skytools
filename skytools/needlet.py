@@ -21,7 +21,7 @@
 #
 #########################################################################
 """
-CMBframe needlet transformation module provides functions and utilities
+SkyTools needlet transformation module provides functions and utilities
 to performs needlet transformation of data on a sphere. The module provides
 setup of cosine and gaussian needlets bands and are used in conjunction with 
 healpix sherical harmonic transformation of the data on the sphere.

@@ -20,6 +20,11 @@
 # at shamik@lbl.gov
 #
 #########################################################################
+"""
+The SkyTools HEALPix utilities module provides useful and frequently used macro funtions 
+to augment the function set available with Healpy. Some of these utility functions are 
+inspired by HEALPix Fortran Facilities.
+"""
 
 import numpy as np
 import healpy as hp
@@ -211,6 +216,46 @@ def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
     return Cl_binned
 
 def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None, pixwin_in=None, pixwin_out=None, mode='i'):
+    """
+    This is equivalent to the HEALPix Fortran utility by the same name, used to change the beam and/or pixel window of alms.
+    The effective operation is: 
+    \(a^{\rm out}_{\\ell m} = \frac{b^{\rm out}_\ell p^{\rm in}_\ell}{b^{\rm out}_\ell p^{\rm in}_\ell} a^{\rm in}_{\\ell m}\)
+
+    Parameters
+    ----------
+    alm_in : numpy ndarray
+        A 1D or 2D numpy array containing HEALPix maps. The shape of the array should be: ``(nalms, alm_size)`` for
+        multiple alms and ``(alm_size,)`` for single alm.
+    mode : string, optional
+        Determines the choice of beam transfer function. Choices are: ``i`` for intenity type maps for 
+        spin-0/scalar fields (like CMB temperature); ``iqu`` or ``teb`` for ``nalms = 3``; ``e``, ``b`` for
+        E- or B-mode scalar map inputs (accounts for difference in the Gaussian beam definition from intensity);
+        ``eb`` or ``teb`` for input of 2 polarized alms but with polarization. Default is ``i``.
+    fwhm_in : float, optional
+        Full-width at half maximum of the Gaussian beam of the input alm. If ``beam_in`` is also provided, then 
+        ``fwhm_in`` is ignored. Default is ``None``.
+    fwhm_out : float, optional
+        Full-width at half maximum of the Gaussian beam of the output alm. If ``beam_out`` is also provided, then 
+        ``fwhm_out`` is ignored. Default is ``None``.
+    beam_in : numpy ndarray, optional
+        Beam transfer function of the input alm. The shape of the array must be ``(lmax_sht+1, )`` or ``(lmax_sht+1, nalms)``.
+        If ``mode`` is ``iqu`` or ``teb``, the shape must be ``(lmax_sht+1, 3)``. Defailt is ``None``.
+    beam_out : numpy ndarray, optional
+        Beam transfer function of the output alm. The shape of the array must be ``(lmax_sht+1, )`` or ``(lmax_sht+1, nalms)``.
+        If ``mode`` is ``iqu`` or ``teb``, the shape must be ``(lmax_sht+1, 3)``. Defailt is ``None``.
+    pixwin_in : int, optional
+        Specifies the ``NSIDE`` of the HEALPix pixel window function to fetch for the input, if applicable. Arbitrary
+        pixel window functions are currently not supported. Default is ``None``.
+    pixwin_out : int, optional
+        Specifies the ``NSIDE`` of the HEALPix pixel window function to fetch for the output, if applicable. Arbitrary
+        pixel window functions are currently not supported. Default is ``None``.
+
+    Returns
+    -------
+    numpy ndarray
+        Returns a numpy ndarray for output alms. Shape of output : ``(nalms, alm_size)`` or ``(alm_size,)``.
+    """
+    
     alm_in = np.array(alm_in)
 
     if alm_in.ndim < 2:
@@ -335,6 +380,51 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
     
     
 def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None, pixwin_in=None, pixwin_out=None):
+    """
+    The ``change_resolution`` function is a map level reconvolution utility. This is a map-level wrapper for 
+    the ``process_alm`` function, to change resolution of a HEALPix map via spherical harmonic transforms (SHT). This 
+    is particularly useful for changing resolution of Stokes Q and U maps.
+
+    Parameters
+    ----------
+    map_in : numpy ndarray
+        A 1D or 2D numpy array containing HEALPix maps. The shape of the array should be: ``(nmaps, npix)`` for
+        multiple maps and ``(npix,)`` for single map.
+    nside_out : int, optional
+        Value of HEALPix ``NSIDE`` value for the output map. Default is the same ``NSIDE`` 
+        as the input map.
+    mode : string, optional
+        Determines the type of SHT that is performed on the map. Choices are: ``i`` for intenity type maps for 
+        spin-0/scalar fields (like CMB temperature); ``iqu`` for ``nmap = 3`` and IQU map input; ``e``, ``b`` for
+        E- or B-mode scalar map inputs (accounts for difference in the Gaussian beam definition from intensity);
+        ``eb`` or ``teb`` for two or three input scalar maps but with polarization. Note: only ``iqu`` option 
+        assumes spin-2 fields for SHT. Default is ``i``.
+    lmax_sht : int, optional
+        ``lmax`` used in the SHT. Default is ``3 * NSIDE - 1`` for ``NSIDE`` of input map.
+    fwhm_in : float, optional
+        Full-width at half maximum of the Gaussian beam of the input map. If ``beam_in`` is also provided, then 
+        ``fwhm_in`` is ignored. Default is ``None``.
+    fwhm_out : float, optional
+        Full-width at half maximum of the Gaussian beam of the output map. If ``beam_out`` is also provided, then 
+        ``fwhm_out`` is ignored. Default is ``None``.
+    beam_in : numpy ndarray, optional
+        Beam transfer function of the input map. The shape of the array must be ``(lmax_sht+1, )`` or ``(lmax_sht+1, nmaps)``.
+        If ``mode`` is ``iqu`` or ``teb``, the shape must be ``(lmax_sht+1, 3)``. Defailt is ``None``.
+    beam_out : numpy ndarray, optional
+        Beam transfer function of the output map. The shape of the array must be ``(lmax_sht+1, )`` or ``(lmax_sht+1, nmaps)``.
+        If ``mode`` is ``iqu`` or ``teb``, the shape must be ``(lmax_sht+1, 3)``. Defailt is ``None``.
+    pixwin_in : int, optional
+        Specifies the ``NSIDE`` of the HEALPix pixel window function to fetch for the input, if applicable. Arbitrary
+        pixel window functions are currently not supported. Default is ``None``.
+    pixwin_out : int, optional
+        Specifies the ``NSIDE`` of the HEALPix pixel window function to fetch for the output, if applicable. Arbitrary
+        pixel window functions are currently not supported. Default is ``None``.
+
+    Returns
+    -------
+    numpy ndarray
+        Returns a numpy ndarray for output maps. Shape of output : ``(nmaps, npix_out)`` or ``(npix_out,)``.
+    """
     map_to_grd = np.array(map_in)
 
     if map_to_grd.ndim == 1 :
