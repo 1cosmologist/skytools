@@ -219,7 +219,7 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
     """
     This is equivalent to the HEALPix Fortran utility by the same name, used to change the beam and/or pixel window of alms.
     The effective operation is: 
-    \(a^{out}_{\\ell m} = \frac{b^{out}_\ell p^{\rm in}_\ell}{b^{out}_\ell p^{in}_\ell} a^{in}_{\\ell m}\)
+    \(a^{\\rm out}_{\\ell m} = \\frac{b^{out}_\ell p^{\rm in}_\ell}{b^{out}_\ell p^{in}_\ell} a^{in}_{\\ell m}\)
 
     Parameters
     ----------
