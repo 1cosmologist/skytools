@@ -66,7 +66,7 @@ def compute_beam_ratio(beam_nu, beam_0, thresh=0.):
     beam_nu : numpy array
         A numpy 1D array of shape [lmax+1], containing the original/native beam of the data. 
         If polarized beam contains either the E component or the B component depending on 
-        which map/alm is being targeted. This represents $$B^{T/E/B}_{\\ell}$$ for the 
+        which map/alm is being targeted. This represents $$b^{T/E/B}_{\\ell}$$ for the 
         different maps in the set.
     beam_0 : numpy array
         A numpy 1D array of shape [lmax+1] representing the beam of the common resolution 
