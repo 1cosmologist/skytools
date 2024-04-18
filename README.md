@@ -8,7 +8,7 @@ Installation Instructions
 Install inside a conda environment. The current version targets python version **>= 3.9**. You also need `meson` and `pkg-config` installed in the conda environment for the build backend. All three can be installed by doing `conda install <package>`.
 
 
-Following python packages are required for SkyTools to work: 
+Following python packages are required for SkyTools to work:  
 1. `astropy`  
 2. `healpy (>=1.16.0)`  
 3. `numpy`  
