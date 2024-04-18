@@ -1,6 +1,6 @@
 # SkyTools
 
-##### *This a library of tools for CMB sky data analysis on a sphere. Many of these tools have been ported from the Planck Sky Model.*
+## *This a library of tools for CMB sky data analysis on a sphere. Many of these tools have been ported from the Planck Sky Model.*
 
 #### Installation Instructions
 
@@ -9,10 +9,10 @@ Install inside a conda environment. The current version targets python version *
 
 Following python packages are required for SkyTools to work: 
 1. `astropy` 
-2. `healpy (>=1.16.0)` 
+2. `healpy (>=1.16.0)`  
 3. `numpy` 
-4. `scipy` 
-5. `joblib` 
+4. `scipy`  
+5. `joblib`  
 
 To install download the zip of the project or git clone the project. Unzip the folder if downloaded. Then at the root level of the project (where you find the `pyproject.toml` file) do `pip install .` to install to your active conda environment. You can check if the package is installed in the conda environment by doing `conda list | grep skytools`. Try `python -c "import skytools"` in the same conda environment to verify that the package has been installed correctly. 
 
