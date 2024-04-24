@@ -475,11 +475,11 @@ def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=N
 
 def mask_udgrade(mask_in, nside_out, cut_val=0.9):
     """
-    The ``mask_udgrade`` function does a udgrade operation `see Healpy ud_grade <https://healpy.readthedocs.io/en/latest/generated/healpy.pixelfunc.ud_grade.html>` to a provided mask, with a threshold that specifies the pixels that are part of the mask after the ud_grade operation.
+    The ``mask_udgrade`` function does a udgrade operation see Healpy `ud_grade <https://healpy.readthedocs.io/en/latest/generated/healpy.pixelfunc.ud_grade.html>`_ to a provided mask, with a threshold that specifies the pixels that are part of the mask after the ud_grade operation.
 
     Parameters
     ----------
-    mask_in : numpy array or ndarray
+    mask_in : numpy ndarray (npix,) or (nmaps,npix)
         Input mask or sequence of input masks which have the same size. 
     nside_out : int
         Value of HEALPix ``NSIDE`` value for the output mask.
@@ -489,7 +489,7 @@ def mask_udgrade(mask_in, nside_out, cut_val=0.9):
 
     Returns
     -------
-    numpy array or ndarray
+    numpy ndarray (npix,) or (nmaps,npix)
         Returns the upgraded or degraded mask(s).
     """
     nside_in = hp.get_nside(mask_in)
