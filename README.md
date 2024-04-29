@@ -9,6 +9,7 @@ The easiest way to install skytools is with conda:
 `conda config --add channels conda-forge`  
 `conda install skytools`
 
+**Installing from source:**  
 Install inside a conda environment. The current version targets python version **>= 3.9**. You also need `meson` and `pkg-config` installed in the conda environment for the build backend. All three can be installed by doing `conda install <package>`.
 
 
