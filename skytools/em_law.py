@@ -91,7 +91,9 @@ def B_prime_nu_T(nu_in_GHz, T_planck=T_CMB):
 
 def ysz_spectral_law(nu_in_GHz):
     """
-    ysz_spectral_law is the SED function for Compton y parameter.
+    ysz_spectral_law is the SED function for Compton y parameter, defined as:
+    .. math:: 
+        y = \\frac{dB(\\nu, T)}{dT} (\\frac{\\frac{h \\nu}{k T}}{tanh(\\frac{h \\nu}{k T}/ 2.)} - 4) T.
     It returns the frequency scaling of y SZ for nu (can be vectorized).
 
     Parameters
