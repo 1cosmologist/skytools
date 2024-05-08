@@ -93,7 +93,7 @@ def ysz_spectral_law(nu_in_GHz):
     """
     ysz_spectral_law is the SED function for Compton y parameter, defined as:
     .. math:: 
-        y = \\frac{dB(\\nu, T)}{dT} (\\frac{\\frac{h \\nu}{k T}}{tanh(\\frac{\\frac{h \\nu}{k T}}{2})} - 4) T.
+        y_{SZ} = \\frac{dB(\\nu, T)}{dT} (\\frac{\\frac{h \\nu}{k T}}{tanh(\\frac{\\frac{h \\nu}{k T}}{2})} - 4) T.
     It returns the frequency scaling of y SZ for nu (can be vectorized).
 
     Parameters
@@ -121,7 +121,9 @@ def ysz_spectral_law(nu_in_GHz):
 
 def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
     """
-    greybody is the SED function for a greybody distribution.
+    greybody is the SED function for a greybody distribution, defined as:
+    .. math:: 
+        I_\\nu = A \\frac{\\nu}{\\nu_0}^{\\beta} \\frac{B(\\nu, T)}{B(\\nu_0, T)}.
     
     This function allows to set flux at reference frequency. If not used
     the output is just the frequency scaling of the greybody.
@@ -131,13 +133,13 @@ def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
     nu_in_GHz : float or numpy 1D array
         Frequency in GHz at which we want the value of the greybody function. 
     nu_ref_in_GHz : float
-        Greybody reference frequency in GHz.
+        Greybody reference frequency in GHz ..math:: \\nu_0.
     spec_ind : float
-        Spectral index of the greybody.
+        Spectral index of the greybody ..math:: \\beta.
     T_grey : float
         Greybody temperature in Kelvin.
     flux_ref : float, optional
-        Amplitude of greybody emissions at reference frequency in arbitrary units. 
+        Amplitude of greybody emissions at reference frequency in arbitrary units A. 
         Default value is 1 (returns frequency scaling).
 
     Returns
