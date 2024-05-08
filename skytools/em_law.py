@@ -31,7 +31,7 @@ T_CMB = 2.72548 # K
 
 def B_nu_T(nu_in_GHz, T_planck=T_CMB):
     """
-    B_nu_T is the Planck distribution function B(nu, T).
+    B_nu_T is the Planck distribution function $B(\nu, T) = \frac{2 h \nu^3}{c^2} \frac{1}{e^{{h \nu}{k_B T}} - 1}$.
     
     It returns the Planck function values for nu (can be vectorized) 
     for a given blackbody temperature.
