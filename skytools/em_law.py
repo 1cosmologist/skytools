@@ -63,7 +63,7 @@ def B_prime_nu_T(nu_in_GHz, T_planck=T_CMB):
     """
     B_prime_nu_T is the derivative Planck distribution function defined as:
     .. math::
-        dB(\\nu, T)/dT = \\frac{h \\nu}{k_B T^2} \\frac{{e^{\\frac{h \\nu}{k_B T}}}{e^{\\frac{h \\nu}{k_B T}} - 1} B(\\nu, T).
+        \\frac{dB(\\nu, T)}{dT} = \\frac{h \\nu}{k_B T^2} \\frac{e^{\\frac{h \\nu}{k_B T}}}{e^{\\frac{h \\nu}{k_B T}} - 1} B(\\nu, T).
     
     It returns the first derivative of the Planck function with respect to T, 
     for nu (can be vectorized) at a given blackbody temperature.
