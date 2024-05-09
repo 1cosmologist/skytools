@@ -93,7 +93,10 @@ def ysz_spectral_law(nu_in_GHz):
     """
     ysz_spectral_law is the SED function for Compton y parameter, defined as:
     .. math:: 
-        y_{SZ} = \\frac{dB(\\nu, T)}{dT} \\left(\\frac{\\frac{h \\nu}{k T}}{\\tanh(\\frac{\\frac{h \\nu}{k T}}{2})} - 4\\right) T.
+        y_{SZ} = \\frac{dB(\\nu, T)}{dT} \\left(\\frac{x}{\\tanh(\\frac{x}{2})} - 4\\right) T.
+    with 
+    .. math::
+        x = \\frac{h \\nu}{k_B T}
     It returns the frequency scaling of y_SZ for nu (can be vectorized).
 
     Parameters
