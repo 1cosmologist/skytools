@@ -475,8 +475,7 @@ def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=N
 
 def mask_udgrade(mask_in, nside_out, cut_val=0.9):
     """
-    The ``mask_udgrade`` function does a udgrade operation ( see Healpy `ud_grade`_ 
-    .. _a link: https://healpy.readthedocs.io/en/latest/generated/healpy.pixelfunc.ud_grade.html) to a provided mask, with a threshold that specifies the pixels that are part of the mask after the ud_grade operation.
+    The ``mask_udgrade`` function does a udgrade operation ( see Healpy `ud_grade` https://healpy.readthedocs.io/en/latest/generated/healpy.pixelfunc.ud_grade.html) to a provided mask, with a threshold that specifies the pixels that are part of the mask after the ud_grade operation.
 
     Parameters
     ----------
