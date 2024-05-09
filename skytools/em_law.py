@@ -123,7 +123,7 @@ def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
     """
     greybody is the SED function for a greybody distribution, defined as:
     .. math:: 
-        I_\\nu = A \\frac{\\nu}{\\nu_0}^{\\beta} \\frac{B(\\nu, T)}{B(\\nu_0, T)}.
+        I_\\nu = A (\\frac{\\nu}{\\nu_0})^{\\beta} \\frac{B(\\nu, T)}{B(\\nu_0, T)}.
     
     This function allows to set flux at reference frequency. If not used
     the output is just the frequency scaling of the greybody.
@@ -139,7 +139,7 @@ def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
     T_grey : float
         Greybody temperature in Kelvin.
     flux_ref : float, optional
-        Amplitude of greybody emissions at reference frequency in arbitrary units A. 
+        Amplitude A of greybody emissions at reference frequency in arbitrary units. 
         Default value is 1 (returns frequency scaling).
 
     Returns
@@ -158,7 +158,9 @@ def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
 
 def powerlaw(nu_in_GHz, nu_ref_in_GHz, spec_ind=1.):
     """
-    powerlaw is the SED function for a powerlaw distribution.
+    powerlaw is the SED function for a powerlaw distribution, defined as:
+    .. math:: 
+        (\\frac{nu}{nu_0})^\\beta.
     
     This function outputs the frequency scaling of a powerlaw distribution.
 
@@ -169,7 +171,7 @@ def powerlaw(nu_in_GHz, nu_ref_in_GHz, spec_ind=1.):
     nu_ref_in_GHz : float
         Powerlaw reference frequency in GHz.
     spec_ind : float, optional
-        Spectral index of the powerlaw. Default value set to 1.
+        Spectral index of the powerlaw ..math:: \\beta. Default value set to 1.
     
     Returns
     -------
@@ -184,7 +186,9 @@ def powerlaw(nu_in_GHz, nu_ref_in_GHz, spec_ind=1.):
 def modified_blackbody(nu_in_GHz, spec_ind, T_bb):
     """
     modified_blackbody is the frequency scaling function for a modified blackbody 
-    (MBB) distribution.
+    (MBB) distribution, defined as:
+    .. math:: 
+        nu^\\beta B(\\nu, T_{bb}).
     
     Comparing with greybody function, this provides modified blackbody frequency scaling 
     without a reference frequency. In principle it return only the numerator part of 
