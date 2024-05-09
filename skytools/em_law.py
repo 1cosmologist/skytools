@@ -93,13 +93,13 @@ def ysz_spectral_law(nu_in_GHz):
     """
     ysz_spectral_law is the SED function for Compton y parameter, defined as:
     .. math:: 
-        y_{SZ} = \\frac{dB(\\nu, T)}{dT} (\\frac{\\frac{h \\nu}{k T}}{tanh(\\frac{\\frac{h \\nu}{k T}}{2})} - 4) T.
-    It returns the frequency scaling of y SZ for nu (can be vectorized).
+        y_{SZ} = \\frac{dB(\\nu, T)}{dT} (\\frac{\\frac{h \\nu}{k T}}{\\tanh(\\frac{\\frac{h \\nu}{k T}}{2})} - 4) T.
+    It returns the frequency scaling of y_SZ for nu (can be vectorized).
 
     Parameters
     ----------
     nu_in_GHz : float or numpy 1D array
-        Frequency in GHz at which we want the value of the y SZ SED. 
+        Frequency in GHz at which we want the value of the y_SZ SED. 
     
     Notes
     ----- 
@@ -108,7 +108,7 @@ def ysz_spectral_law(nu_in_GHz):
     Returns
     -------
     float or numpy 1D array
-        A float value (or 1D array) for the value(s) of the y SZ SED.
+        A float value (or 1D array) for the value(s) of the y_SZ SED.
 
     """
     
@@ -123,7 +123,7 @@ def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
     """
     greybody is the SED function for a greybody distribution, defined as:
     .. math:: 
-        I_\\nu = A (\\frac{\\nu}{\\nu_0})^{\\beta} \\frac{B(\\nu, T)}{B(\\nu_0, T)}.
+        I_\\nu = A \\left(\\frac{\\nu}{\\nu_0}\\right)^{\\beta} \\frac{B(\\nu, T_{grey})}{B(\\nu_0, T_{grey})}.
     
     This function allows to set flux at reference frequency. If not used
     the output is just the frequency scaling of the greybody.
@@ -135,7 +135,7 @@ def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
     nu_ref_in_GHz : float
         Greybody reference frequency in GHz.
     spec_ind : float
-        Spectral index of the greybodya.
+        Spectral index of the greybody.
     T_grey : float
         Greybody temperature in Kelvin.
     flux_ref : float, optional
@@ -160,7 +160,7 @@ def powerlaw(nu_in_GHz, nu_ref_in_GHz, spec_ind=1.):
     """
     powerlaw is the SED function for a powerlaw distribution, defined as:
     .. math:: 
-        (\\frac{\\nu}{\\nu_0})^\\beta.
+        \\left(\\frac{\\nu}{\\nu_0}\\right)^\\beta.
     
     This function outputs the frequency scaling of a powerlaw distribution.
 
