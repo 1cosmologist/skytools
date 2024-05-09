@@ -33,7 +33,10 @@ def B_nu_T(nu_in_GHz, T_planck=T_CMB):
     """
     B_nu_T is the Planck distribution function, defined as: 
     .. math::
-        B(\\nu, T) = \\frac{2 h \\nu^3}{c^2} \\frac{1}{e^{\\frac{h \\nu}{k_B T}} - 1}.
+        B(\\nu, T) = \\frac{2 h \\nu^3}{c^2} \\frac{1}{e^{x} - 1},
+    with 
+    .. math::
+        x = \\frac{h \\nu}{k_B T}.
     
     It returns the Planck function values for nu (can be vectorized) 
     for a given blackbody temperature.
@@ -63,7 +66,10 @@ def B_prime_nu_T(nu_in_GHz, T_planck=T_CMB):
     """
     B_prime_nu_T is the derivative Planck distribution function defined as:
     .. math::
-        \\frac{dB(\\nu, T)}{dT} = \\frac{h \\nu}{k_B T^2} \\frac{e^{\\frac{h \\nu}{k_B T}}}{e^{\\frac{h \\nu}{k_B T}} - 1} B(\\nu, T).
+        \\frac{dB(\\nu, T)}{dT} = \\frac{h \\nu}{k_B T^2} \\frac{e^{x}}{e^{x} - 1} B(\\nu, T),
+    with 
+    .. math::
+        x = \\frac{h \\nu}{k_B T}.
     
     It returns the first derivative of the Planck function with respect to T, 
     for nu (can be vectorized) at a given blackbody temperature.
@@ -93,10 +99,10 @@ def ysz_spectral_law(nu_in_GHz):
     """
     ysz_spectral_law is the SED function for Compton y parameter, defined as:
     .. math:: 
-        y_{SZ} = \\frac{dB(\\nu, T)}{dT} \\left(\\frac{x}{\\tanh(\\frac{x}{2})} - 4\\right) T.
+        y_{SZ} = \\frac{dB(\\nu, T)}{dT} \\left(\\frac{x}{\\tanh(\\frac{x}{2})} - 4\\right) T,
     with 
     .. math::
-        x = \\frac{h \\nu}{k_B T}
+        x = \\frac{h \\nu}{k_B T}.
     It returns the frequency scaling of y_SZ for nu (can be vectorized).
 
     Parameters
