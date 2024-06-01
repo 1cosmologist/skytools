@@ -63,19 +63,19 @@ def compute_beam_ratio(beam_nu, beam_0, thresh=0.):
 
     Parameters
     ----------
-    beam_nu : numpy array
-        A numpy 1D array of shape [lmax+1], containing the original/native beam of the data. 
+    beam_nu : numpy ndarray
+        A numpy array of shape [lmax+1], containing the original/native beam of the data. 
         If polarized beam contains either the E component or the B component depending on 
         which map/alm is being targeted. This represents $$b^{T/E/B}_{\\ell}$$ for the 
         different maps in the set.
-    beam_0 : numpy array
-        A numpy 1D array of shape [lmax+1] representing the beam of the common resolution 
+    beam_0 : numpy ndarray
+        A numpy array of shape [lmax+1] representing the beam of the common resolution 
         that is being targetted.
 
     Returns
     -------
-    numpy array
-        A numpy 1D array of shape [lmax+1] that contains multiplicative factors 
+    numpy ndarray
+        A numpy ndarray of shape [lmax+1] that contains multiplicative factors 
         to convert map alms to the common resolution. 
     """
 
@@ -90,8 +90,30 @@ def compute_beam_ratio(beam_nu, beam_0, thresh=0.):
     return ratio_nu
 
 
-def iqu2teb(map_iqu, mask_in=None, nside=None, teb='te', lmax_sht=None, return_alm=False):
-    
+def iqu2teb(map_iqu, mask_in=None, nside=None, mode='teb', lmax_sht=None, return_alm=False):
+    """
+    Returns TEB maps from IQU Healpix maps. 
+
+    Parameters
+    ----------
+    map_iqu : numpy ndarray
+        A numpy array of shape (3, Npix) which contains IQU maps.
+    mask_in : numpy ndarray, optional
+        A numpy array of shape (Npix,) which contains the mask which will be applied to IQU maps.
+    nside : int, optional
+        Nside of TEB output maps. Default is None.
+    mode : str, optional
+        String specifying the output mode map. Possible mode values are all possible variations of "teb" (e.g. "te"). Default is "teb".
+    lmax_sht : int, optional
+        Maximum l of the power spectrum. Default is None.
+    return_alm : bool, optional
+        Returns alm of TEB or the specified mode instead of the map. Default is False. 
+
+    Returns
+    -------
+    numpy ndarray
+        A numpy array of TEB maps or TEB alms.
+    """
     if nside == None:
         nside = hp.get_nside(map_iqu[0])
 
@@ -105,17 +127,17 @@ def iqu2teb(map_iqu, mask_in=None, nside=None, teb='te', lmax_sht=None, return_a
     mask_bin[mask_in == 0.] = 0.
 
     teb_maps = []
-    if ('t' in teb) or ('T' in teb) :
+    if ('t' in mode) or ('T' in mode) :
         if return_alm:
             teb_maps.append(alms[0])
         else:
             teb_maps.append(hp.alm2map(alms[0], nside, lmax=lmax_sht, pol=False) * mask_bin)
-    if ('e' in teb) or ('E' in teb) :
+    if ('e' in mode) or ('E' in mode) :
         if return_alm:
             teb_maps.append(alms[1])
         else:
             teb_maps.append(hp.alm2map(alms[1], nside, lmax=lmax_sht, pol=False) * mask_bin)
-    if ('b' in teb) or ('B' in teb) :
+    if ('b' in mode) or ('B' in mode) :
         if return_alm:
             teb_maps.append(alms[2])
         else:
@@ -253,7 +275,7 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
     Returns
     -------
     numpy ndarray
-        Returns a numpy ndarray for output alms. Shape of output : ``(nalms, alm_size)`` or ``(alm_size,)``.
+        Returns a numpy array for output alms. Shape of output : ``(nalms, alm_size)`` or ``(alm_size,)``.
     """
 
     alm_in = np.array(alm_in)
@@ -423,7 +445,7 @@ def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=N
     Returns
     -------
     numpy ndarray
-        Returns a numpy ndarray for output maps. Shape of output : ``(nmaps, npix_out)`` or ``(npix_out,)``.
+        Returns a numpy array for output maps. Shape of output : ``(nmaps, npix_out)`` or ``(npix_out,)``.
 
     See also
     --------
