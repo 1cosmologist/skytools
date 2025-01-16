@@ -33,9 +33,24 @@ import os
 datapath = os.getenv('SKYTOOLS_DATA')
 
 __pdoc__ = {}
-# __pdoc__[''] = False
+__pdoc__['alm_fort2c', 'alm_c2fort'] = False
 
 def apodized_gauss_beam(fwhm, lmax):
+    """
+    Compute a Gaussian beam with a linear apodization at high ell to transition the beam to zero.
+
+    Parameters
+    ----------
+    fwhm : float
+        The full width at half maximum of the beam in arcmin.
+    lmax : int
+        The multipole at which the beam goes to zero.
+
+    Returns
+    -------
+    Bl : array
+        The apodized beam up to multipole `lmax`.
+    """
     Bl = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax)
 
     Bl_apo = np.copy(Bl)
@@ -104,6 +119,7 @@ def iqu2teb(map_iqu, mask_in=None, nside=None, mode='teb', lmax_sht=None, return
         Nside of TEB output maps. Default is None.
     mode : str, optional
         String specifying the output mode map. Possible mode values are all possible variations of "teb" (e.g. "te"). Default is "teb".
+        Note, that this keyword has changed from `teb` to `mode`. If you are using version 0.0.1.b5 or earlier, please use `teb` instead.
     lmax_sht : int, optional
         Maximum l of the power spectrum. Default is None.
     return_alm : bool, optional
@@ -146,35 +162,28 @@ def iqu2teb(map_iqu, mask_in=None, nside=None, mode='teb', lmax_sht=None, return
     return np.array(teb_maps)
 
 
-
-def calc_binned_Cl(alm1, alm2=None):
-    ALM = hp.Alm()
-    lmax = ALM.getlmax(len(alm1))
-
-    Cl_1x2 = hp.alm2cl(alm1, alms2=alm2)
-
-    # ells = np.arange(lmax+1)
-    # mode_factor = 2.*ells + 1. 
-    # Cl_1x2 = mode_factor * Cl_1x2
-
-    Cl_binned = np.zeros((lmax+1,))
-
-    for li in range(2, len(Cl_1x2)) :
-            limin = np.maximum(int(np.floor(np.minimum(0.8*li, li-5))), 2)
-            limax = np.minimum(int(np.ceil(np.maximum(1.2*li, li+5))), lmax-1)
-            # li = li - 2
-            # if li < len(leff):
-            #     limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 0)
-            #     limax = np.minimum(np.int(np.ceil(np.maximum(1.2*li, li+5))), len(leff)-1)
-            Cl_binned[li] = (np.sum(Cl_1x2[limin:limax])) / (limax - limin) #) 
-
-    del Cl_1x2 
-
-    Cl_binned = np.reshape(Cl_binned,(1,len(Cl_binned)))
-    return Cl_binned
-
-
 def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
+    """
+    Bins Cl power spectra using box cart averaging.
+
+    Parameters
+    ----------
+    Cl_in : numpy ndarray
+        A numpy array of shape (nmaps, lmax+1) which contains Cl power spectra.
+    dl_min : float, optional
+        Minimum bin size in terms of multipole number. Default is 10.
+    dlbyl : float, optional
+        Bin size in terms of fraction of multipole number. Default is 0.4.
+    dl_max : float, optional
+        Maximum bin size in terms of multipole number. Default is None.
+    fmt_nmt : bool, optional
+        Format the output for Pymaster (NaMaster) library. Default is False.
+
+    Returns
+    -------
+    numpy ndarray
+        The binned Cl power spectra.
+    """
     Cl_in = np.array(Cl_in)
 
     if Cl_in.ndim > 2:
@@ -592,6 +601,28 @@ def alm_c2fort(alm_in):
     return alm_fort 
 
 def query_dist(nside, vec_center, radius_in_rad, inclusive=True):
+    """
+    Query the pixels within a given angular distance from a specified direction in a HEALPix map and calculate their distances.
+
+    Parameters
+    ----------
+    nside : int
+        The `NSIDE` parameter of the HEALPix map.
+    vec_center : ndarray
+        A 3-element array representing the Cartesian coordinates of the center vector.
+    radius_in_rad : float
+        The angular radius in radians within which pixels are queried.
+    inclusive : bool, optional
+        If True, includes pixels whose centers lie exactly on the radius. Default is True.
+
+    Returns
+    -------
+    disc_pix : ndarray
+        An array of pixel indices within the specified angular distance.
+    pix_dist : ndarray
+        An array of angular distances (in radians) from the center vector to each pixel in `disc_pix`.
+    """
+
     disc_pix = np.array(hp.query_disc(nside, vec_center, radius_in_rad, inclusive=inclusive))
 
     vec_center = np.reshape(vec_center, (3,1))
@@ -603,6 +634,25 @@ def query_dist(nside, vec_center, radius_in_rad, inclusive=True):
 
 
 def angdist(nside1, pixlist1, nside2, pixlist2):
+    """
+    Calculate the angular distance between a set of HEALPix pixels on a sky map at two different resolutions.
+
+    Parameters
+    ----------
+    nside1 : int
+        The `NSIDE` parameter of the first sky map.
+    pixlist1 : ndarray of int64
+        The list of pixels in the first sky map.
+    nside2 : int
+        The `NSIDE` parameter of the second sky map.
+    pixlist2 : ndarray of int64
+        The list of pixels in the second sky map.
+
+    Returns
+    -------
+    ang_dist : ndarray of float32
+        The angular distances (in radians) between the pixels in the two sky maps.
+    """
     vec_mat1 = np.array(hp.pix2vec(nside1, pixlist1), dtype=np.float32)       
     vec_mat2 = np.array(hp.pix2vec(nside2, pixlist2), dtype=np.float32)
 
@@ -612,6 +662,29 @@ def angdist(nside1, pixlist1, nside2, pixlist2):
 
     
 def alm_c_lmaxchanger(lmax_i, lmax_f):
+    """
+    Adjusts the lmax of healpy spherical harmonic coefficients.
+    This function returns the indices corresponding to the adjusted lmax.
+
+
+    Parameters
+    ----------
+    lmax_i : int
+        The initial maximum multipole order.
+    lmax_f : int
+        The final maximum multipole order.
+
+    Returns
+    -------
+    numpy.ndarray
+        An array of indices corresponding to perform the size adjustment.
+        If `lmax_i` is less than `lmax_f`, the function returns indices for
+        the larger-lmax alm array that gets filled by the smaller-lmax alm array. 
+        If `lmax_i` is greater than `lmax_f`, the function returns indices selecting
+        the smaller-lmax alm elements. 
+        If they are equal, it returns indicies that maps the alm array to itself..    
+    """
+
     ALM = hp.Alm()
     if lmax_i < lmax_f:
         cidx_max = ALM.getsize(lmax_i)
