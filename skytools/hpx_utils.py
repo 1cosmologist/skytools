@@ -33,7 +33,7 @@ import os
 datapath = os.getenv('SKYTOOLS_DATA')
 
 __pdoc__ = {}
-__pdoc__['alm_fort2c', 'alm_c2fort'] = False
+# __pdoc__[] = False
 
 def apodized_gauss_beam(fwhm, lmax):
     """
@@ -250,8 +250,7 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
     """
     This is equivalent to the HEALPix Fortran utility by the same name, used to change the beam and/or pixel window of alms.
     The effective operation is: 
-    .. math::
-        a^{\\rm out}_{\\ell m} = \\frac{b^{\\rm out}_\\ell p^{\\rm out}_\\ell}{b^{\\rm in}_\\ell p^{\\rm in}_\\ell} a^{\\rm in}_{\\ell m}
+        \( a^{\\rm out}_{\\ell m} = \\frac{b^{\\rm out}_\\ell p^{\\rm out}_\\ell}{b^{\\rm in}_\\ell p^{\\rm in}_\\ell} a^{\\rm in}_{\\ell m} \)
 
     Parameters
     ----------
