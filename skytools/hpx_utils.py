@@ -33,7 +33,6 @@ import os
 datapath = os.getenv('SKYTOOLS_DATA')
 
 __pdoc__ = {}
-# __pdoc__[] = False
 
 def apodized_gauss_beam(fwhm, lmax):
     """
@@ -535,7 +534,7 @@ def mask_udgrade(mask_in, nside_out, cut_val=0.9):
     return mask_out
 
 
-def alm_fort2c(alm_in):
+def _alm_fort2c(alm_in):
     # Assume alm shape to be [lmax, mmax] for nmaps = 1 and [nmaps, lmax, mmax] >= 1
 
     alm_fort = np.array(alm_in)
@@ -567,8 +566,9 @@ def alm_fort2c(alm_in):
 
     return alm_c
     
-
-def alm_c2fort(alm_in):
+    
+    
+def _alm_c2fort(alm_in):
     # Assume alm shape to be [midx,] for nmaps = 1 and [nmaps, midx] >= 1
 
     alm_c = np.array(alm_in)
