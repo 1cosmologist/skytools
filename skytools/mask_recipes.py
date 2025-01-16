@@ -20,15 +20,14 @@
 # at shamik@lbl.gov
 #
 #########################################################################
+""" 
+The SkyTools mask recipes module provides a set of useful functions to construct sky masks.
+"""
 
 import numpy as np 
 import healpy as hp
 from . import hpx_utils as hu
 from . import mask_tools as mt
-
-""" 
-The SkyTools mask recipes module provides a set of useful functions to construct sky masks.
-"""
 
 def smalldisc_mask(nside, lon, lat, radius, aposize=None):
     
@@ -81,11 +80,11 @@ def latitude_mask(nside, lat_cut, aposize=None, inverse=False):
     nside : int
         The ``NSIDE`` parameter of the HEALPix map, defining its resolution.
     lat_cut : float
-        The latitude in degrees below which to mask out pixels, ie $$|b| < $$``lat_cut``.
+        The latitude in degrees below which to mask out pixels, ie \(|b| < \)``lat_cut``.
     aposize : float, optional
         Apodization size in degrees. If provided, a cosine apodization is applied over this angular distance.
     inverse : bool, optional
-        If True, mask out pixels above the specified latitude, ie $$|b| > $$``lat_cut``. Default is False.
+        If True, mask out pixels above the specified latitude, ie \(|b| > \)``lat_cut``. Default is False.
 
     Returns
     -------
@@ -131,9 +130,9 @@ def galridge_mask(nside, lat_cut, lon_cut, aposize=None):
     nside : int
         The ``NSIDE`` parameter of the HEALPix map, defining its resolution.
     lat_cut : float
-        The latitude in degrees below which to mask out pixels , ie $$|b| < $$``lat_cut``.
+        The latitude in degrees below which to mask out pixels , ie \(|b| < \)``lat_cut``.
     lon_cut : float
-        The longitude in degrees below which to mask out pixels, ie $$|l| < $$``lon_cut``.
+        The longitude in degrees below which to mask out pixels, ie \(|l| < \)``lon_cut``.
     aposize : float, optional
         Apodization size in degrees. If provided, a cosine apodization is applied over this angular distance.
 
