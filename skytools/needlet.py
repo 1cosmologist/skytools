@@ -213,7 +213,7 @@ def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_mi
         Sets if all needlet scale maps have the same nside.
         If True then you can set the common nside for all scales 
         with needlet_nside. If nside not specified, the common 
-        nside for all scales is set by: math.ceil(math.log2(lmax)),
+        nside for all scales is set by: ``math.ceil(math.log2(lmax))``,
         with lmax determined from needlet bands.
     needlet_nside : int, optional
         Nside of needlet maps at all bands. Default is None.
