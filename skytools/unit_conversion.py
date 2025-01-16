@@ -85,8 +85,8 @@ def KCMB_to_MJysr(nus_in_GHz, nuc_in_GHz=None, transmission=None):
                 average of nus_in_GHz.
     transmission: np.ndarray, default=None
                 Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
-                of transmission, assuming \lambda^2 factor is multipled and the transmission is in units of
-                MJy/sr. If your bandpass is in K_b unit then the \lambda^2 factor is missing.
+                of transmission, assuming $$\\lambda^2$$ factor is multipled and the transmission is in units of
+                MJy/sr. If your bandpass is in $$K_b$$ unit then the $$\\lambda^2$$ factor is missing.
 
     Returns
     -------
