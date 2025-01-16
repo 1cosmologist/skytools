@@ -50,6 +50,24 @@ def nwhere(array, cond, val, ma=False):
     
 
 def get_mask_border(mask_in, need_nos=False):
+    """
+    Get the border pixels between masked and unmasked regions in a HEALPix map.
+
+    Parameters
+    ----------
+    mask_in : numpy.ndarray
+        A 1D numpy array with the input binary mask, where masked regions are indicated by 0s.
+    need_nos : bool, optional
+        If True, return the number of pixels in the border region. Default is False.
+
+    Returns
+    -------
+    p0, p1 : numpy.ndarray
+        1D numpy arrays containing the pixel numbers of the border region, with p0 and p1
+        referring to the masked and unmasked region border pixels, respectively.
+    np0, np1 : int
+        If need_nos is True, the number of pixels in the border region.
+    """
     npix = hp.get_map_size(mask_in)
     nside = hp.get_nside(mask_in)
 

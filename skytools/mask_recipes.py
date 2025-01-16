@@ -26,8 +26,34 @@ import healpy as hp
 from . import hpx_utils as hu
 from . import mask_tools as mt
 
+""" 
+The SkyTools mask recipes module provides a set of useful functions to construct sky masks.
+"""
+
 def smalldisc_mask(nside, lon, lat, radius, aposize=None):
     
+    """
+    Create a circular mask centered at a specified longitude and latitude.
+
+    Parameters
+    ----------
+    nside : int
+        The ``NSIDE`` parameter of the HEALPix map, defining its resolution.
+    lon : float
+        Longitude of the center of the disc in degrees.
+    lat : float
+        Latitude of the center of the disc in degrees.
+    radius : float
+        Radius of the disc in degrees.
+    aposize : float, optional
+        Apodization size in degrees. If provided, a cosine apodization is applied over this angular distance.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D numpy array representing the HEALPix mask, with pixels within the specified disc set to 1.
+    """
+
     npix = hp.nside2npix(nside)
     mask = np.zeros((npix,))
 
@@ -47,6 +73,25 @@ def smalldisc_mask(nside, lon, lat, radius, aposize=None):
     return mask
 
 def latitude_mask(nside, lat_cut, aposize=None, inverse=False):
+    """
+    Create a mask for a specified latitude cut.
+
+    Parameters
+    ----------
+    nside : int
+        The ``NSIDE`` parameter of the HEALPix map, defining its resolution.
+    lat_cut : float
+        The latitude in degrees below which to mask out pixels, ie $$|b| < $$``lat_cut``.
+    aposize : float, optional
+        Apodization size in degrees. If provided, a cosine apodization is applied over this angular distance.
+    inverse : bool, optional
+        If True, mask out pixels above the specified latitude, ie $$|b| > $$``lat_cut``. Default is False.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D numpy array representing the binary HEALPix mask, unmasked pixels set to 1.
+    """
     npix = hp.nside2npix(nside)
     mask = np.zeros((npix,))
 
@@ -77,6 +122,27 @@ def latitude_mask(nside, lat_cut, aposize=None, inverse=False):
     return mask
 
 def galridge_mask(nside, lat_cut, lon_cut, aposize=None):
+    """
+    Create a mask for a Galactic "ridge" region. The mask is set to 1 for all pixels outside a "box" defined by the specified longitude and latitude cuts. 
+    If an apodization size is provided, a cosine apodization is applied over this angular distance.
+
+    Parameters
+    ----------
+    nside : int
+        The ``NSIDE`` parameter of the HEALPix map, defining its resolution.
+    lat_cut : float
+        The latitude in degrees below which to mask out pixels , ie $$|b| < $$``lat_cut``.
+    lon_cut : float
+        The longitude in degrees below which to mask out pixels, ie $$|l| < $$``lon_cut``.
+    aposize : float, optional
+        Apodization size in degrees. If provided, a cosine apodization is applied over this angular distance.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D numpy array representing the binary HEALPix mask, unmasked pixels set to 1. 
+        This masks out a box region centered on the map with size of ``2 * lat_cut`` in latitude and ``2 * lon_cut`` in longitude.
+    """
     npix = hp.nside2npix(nside)
     mask = np.zeros((npix,))
 
@@ -125,6 +191,38 @@ def galridge_mask(nside, lat_cut, lon_cut, aposize=None):
 
 
 def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_apod=0., saturate=False):
+    """
+    Generate a mask based on intensity or polarized intensity map.
+
+    This function processes an input HEALPix map to create a binary mask by masking 
+    a specified percentage of the highest intensity pixels. Additionally, it offers 
+    optional smoothing and apodization features.
+
+    Parameters
+    ----------
+    nside : int
+        The ``NSIDE`` parameter of the HEALPix map, defining its resolution.
+    IorP_map : array-like
+        A 1D array representing the intensity or polarized intensity map.
+    percent_masked : float
+        Percentage of the lowest intensity pixels to be masked.
+    smooth_in_deg : float, optional
+        The smoothing scale in degrees. If provided, the map is smoothed before 
+        creating the mask. Default is None, which indicates no smoothing.
+    percent_apod : float, optional
+        Percentage of pixels to apodize. A cosine apodization is applied over 
+        this percentage. Default is 0.
+    saturate : bool, optional
+        If True, saturate the mask for pixels beyond the specified percentage.
+        Default is False.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D array representing the binary HEALPix mask, where unmasked pixels 
+        are set to 1.
+    """
+
     IorP_map = np.array(IorP_map)
 
     if (percent_masked < 0.) or (percent_apod < 0.) :
@@ -137,10 +235,18 @@ def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_
         raise Exception("ERROR: Too many dimensions for intensity/polarized intensity map. Aborting!")
         
     npix = hp.nside2npix(nside)
+    
+    # if isinstance(footprint_mask, np.ndarray):
+    #     hu.mask_udgrade(footprint_mask, nside)
+    # else:  
+    #     footprint_mask = np.ones((npix,)) 
+       
+    # ipix_sel = np.where(footprint_mask > 0.5)[0]
+        
     if smooth_in_deg is None:
-        smooth_map = hp.ud_grade(IorP_map, nside)   #Assuming presmoothed
+        smooth_map = hp.ud_grade(IorP_map, nside) #* footprint_mask  #Assuming presmoothed
     elif smooth_in_deg > 0.:
-        smooth_map = hu.change_resolution(IorP_map, nside, mode='i', fwhm_out=smooth_in_deg*60.)
+        smooth_map = hu.change_resolution(IorP_map, nside, mode='i', fwhm_out=smooth_in_deg*60.) #* footprint_mask
 
     del IorP_map
 
@@ -167,6 +273,21 @@ def intensity_mask(nside, IorP_map, percent_masked, smooth_in_deg=None, percent_
     return mask
 
 def saturate_mask(mask_in, clip_val):
+    """
+    Saturate a mask at a given value and normalize.
+
+    Parameters
+    ----------
+    mask_in : numpy ndarray (npix,)
+        Input mask. 
+    clip_val : float
+        Value above which the mask is set to 1., and below which the mask is divided by the clip_val.
+
+    Returns
+    -------
+    numpy ndarray (npix,)
+        Returns the saturated mask.
+    """
     saturated_mask = np.copy(mask_in)
     saturated_mask[saturated_mask >= clip_val] = 1.
     saturated_mask[saturated_mask < clip_val] = saturated_mask[saturated_mask < clip_val] / clip_val

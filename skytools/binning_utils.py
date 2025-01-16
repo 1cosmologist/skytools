@@ -21,17 +21,46 @@
 #
 #########################################################################
 import numpy as np
+""" 
+The SkyTools binning utilities module provides useful and frequently used macro funtions 
+to bin power spectrum data.
+"""
 
 class bins:
     
-    def __init__(self, lmax_o, bsz_0=30, fixed_bins=False, loglims=[[1.3]]):
-# 
-# Set scaling as [scaling, lmax_scale] for each choice. 
-# If same scaling wanted for entire ell range set only scaling.
-# Thus loglims is a tuple if signgle or double element lists: 
-# [[sca_1, lmax_sca1],[sca_2, lmax_sca2],...] 
-#
+    def __init__(self, lmax_o, bsz_0=31, fixed_bins=False, loglims=[[1.3]]):
 
+        """
+        Initializes an instance of the bins class to bin power spectrum data.
+
+        Parameters
+        ----------
+        lmax_o : int
+            The maximum multipole order for the output.
+        bsz_0 : int, optional
+            The initial bin size. Default is 30.
+        fixed_bins : bool, optional
+            If True, uses fixed bin sizes; otherwise, uses logarithmic scaling. Default is False.
+        loglims : list of lists, optional
+            Specifies scaling and limits for logarithmic bins. Each list should contain one or two elements:
+            [scaling] or [scaling, lmax_scale]. Default is [[1.3]].
+
+        Attributes
+        ----------
+        lmax_o : int
+            The maximum multipole order for the output.
+        bin_sz : numpy.ndarray
+            An array containing the sizes of bins.
+        leff : numpy.ndarray
+            An array containing the effective multipole moments for each bin.
+            
+        Notes
+        -----
+        Set scaling as [scaling, lmax_scale] for each choice. 
+        If same scaling wanted for entire ell range set only scaling.
+        Thus loglims is a tuple if single or double element lists: 
+        [[sca_1, lmax_sca1],[sca_2, lmax_sca2],...] 
+        """
         self.lmax_o = lmax_o
         
         i = 0
@@ -75,6 +104,23 @@ class bins:
 
 
     def binner(self, Dell_in, is_Cell = False):
+        """
+        Bins the input Dell power spectrum according to the binning scheme defined by the class instance.
+
+        Parameters
+        ----------
+        Dell_in : numpy ndarray
+            The input power spectrum. Can be either D_ell or C_ell.
+            For C_ell, set is_Cell = True.
+        is_Cell : bool, optional
+            If the input power spectrum is C_ell, set this to True.
+            Default is False.
+
+        Returns
+        -------
+        numpy ndarray
+            The binned power spectrum.
+        """
         ell = np.arange(self.lmax_o+1)
         Dell_factor = ell * (ell + 1.) / 2. / np.pi
 
@@ -103,4 +149,12 @@ class bins:
         return np.array(Dell_binned)
     
     def ell_eff(self):
+        """
+        Returns the effective multipole number for each bin.
+
+        Returns
+        -------
+        numpy ndarray
+            The effective multipole number for each bin.
+        """
         return self.leff

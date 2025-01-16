@@ -49,7 +49,7 @@ def apodized_gauss_beam(fwhm, lmax):
     Returns
     -------
     Bl : array
-        The apodized beam up to multipole `lmax`.
+        The apodized beam up to multipole ``lmax``.
     """
     Bl = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax)
 
@@ -119,7 +119,7 @@ def iqu2teb(map_iqu, mask_in=None, nside=None, mode='teb', lmax_sht=None, return
         Nside of TEB output maps. Default is None.
     mode : str, optional
         String specifying the output mode map. Possible mode values are all possible variations of "teb" (e.g. "te"). Default is "teb".
-        Note, that this keyword has changed from `teb` to `mode`. If you are using version 0.0.1.b5 or earlier, please use `teb` instead.
+        Note, that this keyword has changed from ``teb`` to ``mode``. If you are using version 0.0.1.b5 or earlier, please use ``teb`` instead.
     lmax_sht : int, optional
         Maximum l of the power spectrum. Default is None.
     return_alm : bool, optional
@@ -607,7 +607,7 @@ def query_dist(nside, vec_center, radius_in_rad, inclusive=True):
     Parameters
     ----------
     nside : int
-        The `NSIDE` parameter of the HEALPix map.
+        The ``NSIDE`` parameter of the HEALPix map.
     vec_center : ndarray
         A 3-element array representing the Cartesian coordinates of the center vector.
     radius_in_rad : float
@@ -640,11 +640,11 @@ def angdist(nside1, pixlist1, nside2, pixlist2):
     Parameters
     ----------
     nside1 : int
-        The `NSIDE` parameter of the first sky map.
+        The ``NSIDE`` parameter of the first sky map.
     pixlist1 : ndarray of int64
         The list of pixels in the first sky map.
     nside2 : int
-        The `NSIDE` parameter of the second sky map.
+        The ``NSIDE`` parameter of the second sky map.
     pixlist2 : ndarray of int64
         The list of pixels in the second sky map.
 
@@ -678,9 +678,9 @@ def alm_c_lmaxchanger(lmax_i, lmax_f):
     -------
     numpy.ndarray
         An array of indices corresponding to perform the size adjustment.
-        If `lmax_i` is less than `lmax_f`, the function returns indices for
+        If ``lmax_i`` is less than ``lmax_f``, the function returns indices for
         the larger-lmax alm array that gets filled by the smaller-lmax alm array. 
-        If `lmax_i` is greater than `lmax_f`, the function returns indices selecting
+        If ``lmax_i`` is greater than ``lmax_f``, the function returns indices selecting
         the smaller-lmax alm elements. 
         If they are equal, it returns indicies that maps the alm array to itself..    
     """

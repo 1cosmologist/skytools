@@ -20,6 +20,9 @@
 # at shamik@lbl.gov
 #
 #########################################################################
+""" 
+SkyTools mask tools library provides functions and tools to process masks.
+"""
 
 import numpy as np
 import healpy as hp
@@ -33,6 +36,27 @@ from . import border_finder as bf
 datapath = os.getenv('SKYTOOLS_DATA')
 
 def maskdist(mask_in, dist_from_edge_in_rad):
+    """
+    Calculate the distance map from the edges of masked regions in a HEALPix map.
+
+    This function computes the distance of each valid pixel from the nearest edge of a masked region
+    in the input HEALPix map. The distance is calculated in radians and is limited to the specified
+    maximum distance from the edge.
+
+    Parameters
+    ----------
+    mask_in : numpy.ndarray
+        A 1D numpy array representing the input HEALPix mask, where masked regions are indicated by 0s.
+    dist_from_edge_in_rad : float
+        The maximum distance from the edge, in radians, up to which the distances are calculated.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D numpy array with the same shape as ``mask_in``, containing the distance from the nearest edge
+        for each valid pixel. Pixels beyond the specified distance are assigned the value ``hp.UNSEEN``.
+    """
+
     n_cores = mp.cpu_count()
     nside = hp.get_nside(mask_in)
     
@@ -151,7 +175,87 @@ def apodize_mask(mask_in, aposize_in_deg, apotype="c2", tune=None):
 
     return apo_mask
 
+def fsky(mask_in):
+    """
+    The ``fsky`` function calculates the fraction of the sky that is unmasked.
 
+    Parameters
+    ----------
+    mask_in : numpy ndarray (npix,)
+        Input mask.
+
+    Returns
+    -------
+    numpy float
+        Returns the fraction of the sky that is unmasked.
+    """
+    npix = mask_in.shape[0]
+    
+    return np.sum(mask_in**2.) / npix
+
+def fsky_signal(mask_in):
+    """
+    The ``fsky_signal`` function calculates the sky fraction of a signal-like field that does not scale as inverse squareroot of hitcounts.
+    Based on the definition from CMB-S4 colloboration 2020 (https://arxiv.org/pdf/2008.12619) eq 10.
+
+    Parameters
+    ----------
+    mask_in : numpy ndarray (npix,)
+        Input mask.
+
+    Returns
+    -------
+    numpy float
+        Returns the effective sky fraction for signal-mode, which accounts for the masking effect
+        on the signal.
+    """
+
+    npix = mask_in.shape[0]
+    
+    return (np.sum(mask_in**2.)**2.) / (np.sum(mask_in**4.) * npix)
+
+def fsky_noise(mask_in):
+    """
+    The ``fsky_noise`` function calculates the effective sky fraction for the noise, 
+    which assumes noise scales as inverse squareroot of hitcounts.
+    Based on the definition from CMB-S4 colloboration 2020 (https://arxiv.org/pdf/2008.12619) eq 9.
+
+    Parameters
+    ----------
+    mask_in : numpy ndarray (npix,)
+        Input mask. Which is assumed to be proportional to the hitcount (inverse noise variance weights).
+
+    Returns
+    -------
+    numpy float
+        Returns the effective sky fraction for noise-mode, which accounts for the masking effect
+        assuming noise scaling properties.
+    """
+
+    npix = mask_in.shape[0]
+    
+    return (np.sum(mask_in)**2.) / (np.sum(mask_in**2.) * npix)
+
+def fsky_cross(mask_in):
+    """
+    The ``fsky_cross`` function calculates the effective sky fraction for cross-spectra of noise and signal, 
+    which assumes noise scales as inverse squareroot of hitcounts.
+    Based on the definition from CMB-S4 colloboration 2020 (https://arxiv.org/pdf/2008.12619) eq 11.
+
+    Parameters
+    ----------
+    mask_in : numpy ndarray (npix,)
+        Input mask. Which is assumed to be proportional to the hitcount (inverse noise variance weights).
+
+    Returns
+    -------
+    numpy float
+        Returns the effective sky fraction for cross of noise and signal, which accounts for the masking effect
+        assuming noise scaling properties.
+    """
+    npix = mask_in.shape[0]
+    
+    return (np.sum(mask_in**2.) * np.sum(mask_in)) / (np.sum(mask_in**3.) * npix)
     
 
 
