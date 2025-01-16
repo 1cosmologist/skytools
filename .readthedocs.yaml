@@ -13,7 +13,7 @@ build:
     - pip install scipy 
     - pip install joblib
     - pip install pdoc3
-    - pdoc --html --config latex_math=True --template-dir pdoc --output-dir $READTHEDOCS_OUTPUT skytools
+    - pdoc --html --math --config latex_math=True --template-dir pdoc --output-dir $READTHEDOCS_OUTPUT skytools
     - mv $READTHEDOCS_OUTPUT/skytools $READTHEDOCS_OUTPUT/html
 
 # Explicitly set the version of Python and its requirements
