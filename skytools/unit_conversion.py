@@ -53,7 +53,7 @@ def MJysr_to_Kb(nuc_in_GHz):
     Parameters
     ----------
     nuc_in_GHz: float
-                A float denoting the central frequency of the band. No bandpass information needed.
+        A float denoting the central frequency of the band. No bandpass information needed.
     
     Notes
     -----
@@ -76,17 +76,17 @@ def KCMB_to_MJysr(nus_in_GHz, nuc_in_GHz=None, transmission=None):
     Parameters
     ----------
     nus_in_GHz: float or np.ndarray
-                If single float value is provided, assumed to be delta transmission.
-                If np.ndarray is provided without transmission, assume tophat transmission.
+        If single float value is provided, assumed to be delta transmission.
+        If np.ndarray is provided without transmission, assume tophat transmission.
 
     nuc_in_GHz: float, default=None
-                If nus_in_GHz is a single number, then nuc_in_GHz is ignored, and is assumed to be the same.
-                If nus_in_GHz is a np.ndarray, and nuc_in_GHz is not provided, we assume transmission weighted 
-                average of nus_in_GHz.
+        If nus_in_GHz is a single number, then nuc_in_GHz is ignored, and is assumed to be the same.
+        If nus_in_GHz is a np.ndarray, and nuc_in_GHz is not provided, we assume transmission weighted 
+        average of nus_in_GHz.
     transmission: np.ndarray, default=None
-                Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
-                of transmission, assuming $$\\lambda^2$$ factor is multipled and the transmission is in units of
-                MJy/sr. If your bandpass is in $$K_b$$ unit then the $$\\lambda^2$$ factor is missing.
+        Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
+        of transmission, assuming \(\\lambda^2\) factor is multipled and the transmission is in units of
+        MJy/sr. If your bandpass is in \(K_b\) unit then the \(\\lambda^2\) factor is missing.
 
     Returns
     -------
@@ -122,13 +122,13 @@ def KCMB_to_ySZ(nus_in_GHz, transmission=None):
     Parameters
     ----------
     nus_in_GHz: float or np.ndarray
-                If single float value is provided, assumed to be delta transmission.
-                If np.ndarray is provided without transmission, assume tophat transmission.
+        If single float value is provided, assumed to be delta transmission.
+        If np.ndarray is provided without transmission, assume tophat transmission.
 
     transmission: np.ndarray, default=None
-                Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
-                of transmission, assuming \lambda^2 factor is multipled and the transmission is in units of
-                MJy/sr. If your bandpass is in K_b unit then the \lambda^2 factor is missing.
+        Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
+        of transmission, assuming \(\\lambda^2\) factor is multipled and the transmission is in units of
+        MJy/sr. If your bandpass is in \(K_b\) unit then the \(\\lambda^2\) factor is missing.
 
     Returns
     -------
