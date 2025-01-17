@@ -1,15 +1,67 @@
+#######################################################################
+# This file is a part of SkyTools
+#
+# Sky Tools
+# Copyright (C) 2023  Shamik Ghosh
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# For more information about SkyTools please visit 
+# <https://github.com/1cosmologist/skytools> or contact Shamik Ghosh 
+# at shamik@lbl.gov
+#
+#########################################################################
+""" 
+The binning utilities module provides useful and frequently used macro funtions 
+to bin power spectrum data.
+"""
+
 import numpy as np
 
 class bins:
     
-    def __init__(self, lmax_o, bsz_0=30, fixed_bins=False, loglims=[[1.3]]):
-# 
-# Set scaling as [scaling, lmax_scale] for each choice. 
-# If same scaling wanted for entire ell range set only scaling.
-# Thus loglims is a tuple if signgle or double element lists: 
-# [[sca_1, lmax_sca1],[sca_2, lmax_sca2],...] 
-#
+    def __init__(self, lmax_o, bsz_0=31, fixed_bins=False, loglims=[[1.3]]):
 
+        """
+        Initializes an instance of the bins class to bin power spectrum data.
+
+        Parameters
+        ----------
+        lmax_o : int
+            The maximum multipole order for the output.
+        bsz_0 : int, optional
+            The initial bin size. Default is 30.
+        fixed_bins : bool, optional
+            If True, uses fixed bin sizes; otherwise, uses logarithmic scaling. Default is False.
+        loglims : list of lists, optional
+            Specifies scaling and limits for logarithmic bins. Each list should contain one or two elements:
+            [scaling] or [scaling, lmax_scale]. Default is [[1.3]].
+
+        Attributes
+        ----------
+        lmax_o : int
+            The maximum multipole order for the output.
+        bin_sz : numpy.ndarray
+            An array containing the sizes of bins.
+        leff : numpy.ndarray
+            An array containing the effective multipole moments for each bin.
+            
+        Notes
+        -----
+        Set scaling as [scaling, lmax_scale] for each choice. 
+        If same scaling wanted for entire ell range set only scaling.
+        Thus loglims is a tuple if single or double element lists: 
+        [[sca_1, lmax_sca1],[sca_2, lmax_sca2],...] 
+        """
         self.lmax_o = lmax_o
         
         i = 0
@@ -53,6 +105,23 @@ class bins:
 
 
     def binner(self, Dell_in, is_Cell = False):
+        """
+        Bins the input Dell power spectrum according to the binning scheme defined by the class instance.
+
+        Parameters
+        ----------
+        Dell_in : numpy ndarray
+            The input power spectrum. Can be either D_ell or C_ell.
+            For C_ell, set is_Cell = True.
+        is_Cell : bool, optional
+            If the input power spectrum is C_ell, set this to True.
+            Default is False.
+
+        Returns
+        -------
+        numpy ndarray
+            The binned power spectrum.
+        """
         ell = np.arange(self.lmax_o+1)
         Dell_factor = ell * (ell + 1.) / 2. / np.pi
 
@@ -81,4 +150,12 @@ class bins:
         return np.array(Dell_binned)
     
     def ell_eff(self):
+        """
+        Returns the effective multipole number for each bin.
+
+        Returns
+        -------
+        numpy ndarray
+            The effective multipole number for each bin.
+        """
         return self.leff

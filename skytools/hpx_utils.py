@@ -20,6 +20,11 @@
 # at shamik@lbl.gov
 #
 #########################################################################
+"""
+The HEALPix utilities module provides useful and frequently used macro funtions 
+to augment the function set available with Healpy. Some of these utility functions are 
+inspired by HEALPix Fortran Facilities.
+"""
 
 import numpy as np
 import healpy as hp
@@ -28,9 +33,23 @@ import os
 datapath = os.getenv('SKYTOOLS_DATA')
 
 __pdoc__ = {}
-# __pdoc__[''] = False
 
 def apodized_gauss_beam(fwhm, lmax):
+    """
+    Compute a Gaussian beam with a linear apodization at high ell to transition the beam to zero.
+
+    Parameters
+    ----------
+    fwhm : float
+        The full width at half maximum of the beam in arcmin.
+    lmax : int
+        The multipole at which the beam goes to zero.
+
+    Returns
+    -------
+    Bl : array
+        The apodized beam up to multipole ``lmax``.
+    """
     Bl = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax)
 
     Bl_apo = np.copy(Bl)
@@ -58,19 +77,19 @@ def compute_beam_ratio(beam_nu, beam_0, thresh=0.):
 
     Parameters
     ----------
-    beam_nu : numpy array
-        A numpy 1D array of shape [lmax+1], containing the original/native beam of the data. 
+    beam_nu : numpy ndarray
+        A numpy array of shape [lmax+1], containing the original/native beam of the data. 
         If polarized beam contains either the E component or the B component depending on 
-        which map/alm is being targeted. This represents $$B^{T/E/B}_{\\ell}$$ for the 
+        which map/alm is being targeted. This represents $$b^{T/E/B}_{\\ell}$$ for the 
         different maps in the set.
-    beam_0 : numpy array
-        A numpy 1D array of shape [lmax+1] representing the beam of the common resolution 
+    beam_0 : numpy ndarray
+        A numpy array of shape [lmax+1] representing the beam of the common resolution 
         that is being targetted.
 
     Returns
     -------
-    numpy array
-        A numpy 1D array of shape [lmax+1] that contains multiplicative factors 
+    numpy ndarray
+        A numpy ndarray of shape [lmax+1] that contains multiplicative factors 
         to convert map alms to the common resolution. 
     """
 
@@ -85,8 +104,31 @@ def compute_beam_ratio(beam_nu, beam_0, thresh=0.):
     return ratio_nu
 
 
-def iqu2teb(map_iqu, mask_in=None, nside=None, teb='te', lmax_sht=None, return_alm=False):
-    
+def iqu2teb(map_iqu, mask_in=None, nside=None, mode='teb', lmax_sht=None, return_alm=False):
+    """
+    Returns TEB maps from IQU Healpix maps. 
+
+    Parameters
+    ----------
+    map_iqu : numpy ndarray
+        A numpy array of shape (3, Npix) which contains IQU maps.
+    mask_in : numpy ndarray, optional
+        A numpy array of shape (Npix,) which contains the mask which will be applied to IQU maps.
+    nside : int, optional
+        Nside of TEB output maps. Default is None.
+    mode : str, optional
+        String specifying the output mode map. Possible mode values are all possible variations of "teb" (e.g. "te"). Default is "teb".
+        Note, that this keyword has changed from ``teb`` to ``mode``. If you are using version 0.0.1.b5 or earlier, please use ``teb`` instead.
+    lmax_sht : int, optional
+        Maximum l of the power spectrum. Default is None.
+    return_alm : bool, optional
+        Returns alm of TEB or the specified mode instead of the map. Default is False. 
+
+    Returns
+    -------
+    numpy ndarray
+        A numpy array of TEB maps or TEB alms.
+    """
     if nside == None:
         nside = hp.get_nside(map_iqu[0])
 
@@ -100,17 +142,17 @@ def iqu2teb(map_iqu, mask_in=None, nside=None, teb='te', lmax_sht=None, return_a
     mask_bin[mask_in == 0.] = 0.
 
     teb_maps = []
-    if ('t' in teb) or ('T' in teb) :
+    if ('t' in mode) or ('T' in mode) :
         if return_alm:
             teb_maps.append(alms[0])
         else:
             teb_maps.append(hp.alm2map(alms[0], nside, lmax=lmax_sht, pol=False) * mask_bin)
-    if ('e' in teb) or ('E' in teb) :
+    if ('e' in mode) or ('E' in mode) :
         if return_alm:
             teb_maps.append(alms[1])
         else:
             teb_maps.append(hp.alm2map(alms[1], nside, lmax=lmax_sht, pol=False) * mask_bin)
-    if ('b' in teb) or ('B' in teb) :
+    if ('b' in mode) or ('B' in mode) :
         if return_alm:
             teb_maps.append(alms[2])
         else:
@@ -119,35 +161,28 @@ def iqu2teb(map_iqu, mask_in=None, nside=None, teb='te', lmax_sht=None, return_a
     return np.array(teb_maps)
 
 
-
-def calc_binned_Cl(alm1, alm2=None):
-    ALM = hp.Alm()
-    lmax = ALM.getlmax(len(alm1))
-
-    Cl_1x2 = hp.alm2cl(alm1, alms2=alm2)
-
-    # ells = np.arange(lmax+1)
-    # mode_factor = 2.*ells + 1. 
-    # Cl_1x2 = mode_factor * Cl_1x2
-
-    Cl_binned = np.zeros((lmax+1,))
-
-    for li in range(2, len(Cl_1x2)) :
-            limin = np.maximum(int(np.floor(np.minimum(0.8*li, li-5))), 2)
-            limax = np.minimum(int(np.ceil(np.maximum(1.2*li, li+5))), lmax-1)
-            # li = li - 2
-            # if li < len(leff):
-            #     limin = np.maximum(np.int(np.floor(np.minimum(0.8*li, li-5))), 0)
-            #     limax = np.minimum(np.int(np.ceil(np.maximum(1.2*li, li+5))), len(leff)-1)
-            Cl_binned[li] = (np.sum(Cl_1x2[limin:limax])) / (limax - limin) #) 
-
-    del Cl_1x2 
-
-    Cl_binned = np.reshape(Cl_binned,(1,len(Cl_binned)))
-    return Cl_binned
-
-
 def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
+    """
+    Bins Cl power spectra using box cart averaging.
+
+    Parameters
+    ----------
+    Cl_in : numpy ndarray
+        A numpy array of shape (nmaps, lmax+1) which contains Cl power spectra.
+    dl_min : float, optional
+        Minimum bin size in terms of multipole number. Default is 10.
+    dlbyl : float, optional
+        Bin size in terms of fraction of multipole number. Default is 0.4.
+    dl_max : float, optional
+        Maximum bin size in terms of multipole number. Default is None.
+    fmt_nmt : bool, optional
+        Format the output for Pymaster (NaMaster) library. Default is False.
+
+    Returns
+    -------
+    numpy ndarray
+        The binned Cl power spectra.
+    """
     Cl_in = np.array(Cl_in)
 
     if Cl_in.ndim > 2:
@@ -211,6 +246,46 @@ def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
     return Cl_binned
 
 def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None, pixwin_in=None, pixwin_out=None, mode='i'):
+    """
+    This is equivalent to the HEALPix Fortran utility by the same name, used to change the beam and/or pixel window of alms.
+    The effective operation is: 
+        \( a^{\\rm out}_{\\ell m} = \\frac{b^{\\rm out}_\\ell p^{\\rm out}_\\ell}{b^{\\rm in}_\\ell p^{\\rm in}_\\ell} a^{\\rm in}_{\\ell m} \)
+
+    Parameters
+    ----------
+    alm_in : numpy ndarray
+        A 1D or 2D numpy array containing HEALPix maps. The shape of the array should be: ``(nalms, alm_size)`` for
+        multiple alms and ``(alm_size,)`` for single alm.
+    mode : string, optional
+        Determines the choice of beam transfer function. Choices are: ``i`` for intensity-type alms for 
+        spin-0/scalar fields (like CMB temperature); ``iqu`` or ``teb`` for ``nalms = 3``; ``e``, ``b`` for
+        E- or B-mode alms inputs (accounts for difference in the Gaussian beam definition from intensity);
+        ``eb`` or ``teb`` for input of 2 polarized alms but with polarization. Default is ``i``.
+    fwhm_in : float, optional
+        Full-width at half maximum of the Gaussian beam of the input alm. If ``beam_in`` is also provided, then 
+        ``fwhm_in`` is ignored. Default is ``None``.
+    fwhm_out : float, optional
+        Full-width at half maximum of the Gaussian beam of the output alm. If ``beam_out`` is also provided, then 
+        ``fwhm_out`` is ignored. Default is ``None``.
+    beam_in : numpy ndarray, optional
+        Beam transfer function of the input alm. The shape of the array must be ``(lmax_sht+1,)`` or ``(lmax_sht+1, nalms)``.
+        If ``mode`` is ``iqu`` or ``teb``, the shape must be ``(lmax_sht+1, 3)``. Default is ``None``.
+    beam_out : numpy ndarray, optional
+        Beam transfer function of the output alm. The shape of the array must be ``(lmax_sht+1,)`` or ``(lmax_sht+1, nalms)``.
+        If ``mode`` is ``iqu`` or ``teb``, the shape must be ``(lmax_sht+1, 3)``. Default is ``None``.
+    pixwin_in : int, optional
+        Specifies the ``NSIDE`` of the HEALPix pixel window function to fetch for the input, if applicable. Arbitrary
+        pixel window functions are currently not supported. Default is ``None``.
+    pixwin_out : int, optional
+        Specifies the ``NSIDE`` of the HEALPix pixel window function to fetch for the output, if applicable. Arbitrary
+        pixel window functions are currently not supported. Default is ``None``.
+
+    Returns
+    -------
+    numpy ndarray
+        Returns a numpy array for output alms. Shape of output : ``(nalms, alm_size)`` or ``(alm_size,)``.
+    """
+
     alm_in = np.array(alm_in)
 
     if alm_in.ndim < 2:
@@ -335,6 +410,55 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
     
     
 def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None, pixwin_in=None, pixwin_out=None):
+    """
+    The ``change_resolution`` function is a map level reconvolution utility. This is a map-level wrapper for 
+    the ``process_alm`` function, to change resolution of a HEALPix map via spherical harmonic transforms (SHT). This 
+    is particularly useful for changing resolution of polarization maps.
+
+    Parameters
+    ----------
+    map_in : numpy ndarray
+        A 1D or 2D numpy array containing HEALPix maps. The shape of the array should be: ``(nmaps, npix)`` for
+        multiple maps and ``(npix,)`` for single map.
+    nside_out : int, optional
+        Value of HEALPix ``NSIDE`` value for the output map. Default is the same ``NSIDE`` 
+        as the input map.
+    mode : string, optional
+        Determines the type of SHT that is performed on the map. Choices are: ``i`` for intensity-type maps for 
+        spin-0/scalar fields (like CMB temperature); ``iqu`` for ``nmap = 3`` and IQU map input; ``e``, ``b`` for
+        E- or B-mode scalar map inputs (accounts for difference in the Gaussian beam definition from intensity);
+        ``eb`` or ``teb`` for two or three input scalar maps but with polarization. Note: only ``iqu`` option 
+        assumes spin-2 fields for SHT. Default is ``i``.
+    lmax_sht : int, optional
+        ``lmax`` used in the SHT. Default is ``3 * NSIDE - 1`` for ``NSIDE`` of input map.
+    fwhm_in : float, optional
+        Full-width at half maximum of the Gaussian beam of the input map. If ``beam_in`` is also provided, then 
+        ``fwhm_in`` is ignored. Default is ``None``.
+    fwhm_out : float, optional
+        Full-width at half maximum of the Gaussian beam of the output map. If ``beam_out`` is also provided, then 
+        ``fwhm_out`` is ignored. Default is ``None``.
+    beam_in : numpy ndarray, optional
+        Beam transfer function of the input map. The shape of the array must be ``(lmax_sht+1,)`` or ``(lmax_sht+1, nmaps)``.
+        If ``mode`` is ``iqu`` or ``teb``, the shape must be ``(lmax_sht+1, 3)``. Default is ``None``.
+    beam_out : numpy ndarray, optional
+        Beam transfer function of the output map. The shape of the array must be ``(lmax_sht+1,)`` or ``(lmax_sht+1, nmaps)``.
+        If ``mode`` is ``iqu`` or ``teb``, the shape must be ``(lmax_sht+1, 3)``. Default is ``None``.
+    pixwin_in : int, optional
+        Specifies the ``NSIDE`` of the HEALPix pixel window function to fetch for the input, if applicable. Arbitrary
+        pixel window functions are currently not supported. Default is ``None``.
+    pixwin_out : int, optional
+        Specifies the ``NSIDE`` of the HEALPix pixel window function to fetch for the output, if applicable. Arbitrary
+        pixel window functions are currently not supported. Default is ``None``.
+
+    Returns
+    -------
+    numpy ndarray
+        Returns a numpy array for output maps. Shape of output : ``(nmaps, npix_out)`` or ``(npix_out,)``.
+
+    See also
+    --------
+    ``process_alm``
+    """
     map_to_grd = np.array(map_in)
 
     if map_to_grd.ndim == 1 :
@@ -380,6 +504,24 @@ def change_resolution(map_in, nside_out=None, mode='i', lmax_sht=None, fwhm_in=N
     return maps_out
 
 def mask_udgrade(mask_in, nside_out, cut_val=0.9):
+    """
+    The ``mask_udgrade`` function does a udgrade operation to a provided mask, with a threshold that specifies the pixels that are part of the mask after the ud_grade operation.
+
+    Parameters
+    ----------
+    mask_in : numpy ndarray (npix,) or (nmaps,npix)
+        Input mask or sequence of input masks which have the same size. 
+    nside_out : int
+        Value of HEALPix ``NSIDE`` value for the output mask.
+    cut_val : float, optional
+        Value above which we threshold the udgraded mask to be 1, for values of pixels that are below this value, the output mask is set to 0. 
+        The value must be between 0 and 1. Default is ``0.9``.
+
+    Returns
+    -------
+    numpy ndarray (npix,) or (nmaps,npix)
+        Returns the upgraded or degraded mask(s).
+    """
     nside_in = hp.get_nside(mask_in)
     if nside_out != nside_in:
         mask_out = hp.ud_grade(mask_in, nside_out)
@@ -392,7 +534,7 @@ def mask_udgrade(mask_in, nside_out, cut_val=0.9):
     return mask_out
 
 
-def alm_fort2c(alm_in):
+def _alm_fort2c(alm_in):
     # Assume alm shape to be [lmax, mmax] for nmaps = 1 and [nmaps, lmax, mmax] >= 1
 
     alm_fort = np.array(alm_in)
@@ -424,8 +566,9 @@ def alm_fort2c(alm_in):
 
     return alm_c
     
-
-def alm_c2fort(alm_in):
+    
+    
+def _alm_c2fort(alm_in):
     # Assume alm shape to be [midx,] for nmaps = 1 and [nmaps, midx] >= 1
 
     alm_c = np.array(alm_in)
@@ -458,6 +601,28 @@ def alm_c2fort(alm_in):
     return alm_fort 
 
 def query_dist(nside, vec_center, radius_in_rad, inclusive=True):
+    """
+    Query the pixels within a given angular distance from a specified direction in a HEALPix map and calculate their distances.
+
+    Parameters
+    ----------
+    nside : int
+        The ``NSIDE`` parameter of the HEALPix map.
+    vec_center : ndarray
+        A 3-element array representing the Cartesian coordinates of the center vector.
+    radius_in_rad : float
+        The angular radius in radians within which pixels are queried.
+    inclusive : bool, optional
+        If True, includes pixels whose centers lie exactly on the radius. Default is True.
+
+    Returns
+    -------
+    disc_pix : ndarray
+        An array of pixel indices within the specified angular distance.
+    pix_dist : ndarray
+        An array of angular distances (in radians) from the center vector to each pixel in `disc_pix`.
+    """
+
     disc_pix = np.array(hp.query_disc(nside, vec_center, radius_in_rad, inclusive=inclusive))
 
     vec_center = np.reshape(vec_center, (3,1))
@@ -469,6 +634,25 @@ def query_dist(nside, vec_center, radius_in_rad, inclusive=True):
 
 
 def angdist(nside1, pixlist1, nside2, pixlist2):
+    """
+    Calculate the angular distance between a set of HEALPix pixels on a sky map at two different resolutions.
+
+    Parameters
+    ----------
+    nside1 : int
+        The ``NSIDE`` parameter of the first sky map.
+    pixlist1 : ndarray of int64
+        The list of pixels in the first sky map.
+    nside2 : int
+        The ``NSIDE`` parameter of the second sky map.
+    pixlist2 : ndarray of int64
+        The list of pixels in the second sky map.
+
+    Returns
+    -------
+    ang_dist : ndarray of float32
+        The angular distances (in radians) between the pixels in the two sky maps.
+    """
     vec_mat1 = np.array(hp.pix2vec(nside1, pixlist1), dtype=np.float32)       
     vec_mat2 = np.array(hp.pix2vec(nside2, pixlist2), dtype=np.float32)
 
@@ -478,6 +662,29 @@ def angdist(nside1, pixlist1, nside2, pixlist2):
 
     
 def alm_c_lmaxchanger(lmax_i, lmax_f):
+    """
+    Adjusts the lmax of healpy spherical harmonic coefficients.
+    This function returns the indices corresponding to the adjusted lmax.
+
+
+    Parameters
+    ----------
+    lmax_i : int
+        The initial maximum multipole order.
+    lmax_f : int
+        The final maximum multipole order.
+
+    Returns
+    -------
+    numpy.ndarray
+        An array of indices corresponding to perform the size adjustment.
+        If ``lmax_i`` is less than ``lmax_f``, the function returns indices for
+        the larger-lmax alm array that gets filled by the smaller-lmax alm array. 
+        If ``lmax_i`` is greater than ``lmax_f``, the function returns indices selecting
+        the smaller-lmax alm elements. 
+        If they are equal, it returns indicies that maps the alm array to itself..    
+    """
+
     ALM = hp.Alm()
     if lmax_i < lmax_f:
         cidx_max = ALM.getsize(lmax_i)

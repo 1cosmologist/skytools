@@ -31,14 +31,19 @@ T_CMB = 2.72548 # K
 
 def B_nu_T(nu_in_GHz, T_planck=T_CMB):
     """
-    B_nu_T is the Planck distribution function B(nu, T).
+    B_nu_T is the Planck distribution function, defined as: 
+    .. math::
+        B(\\nu, T) = \\frac{2 h \\nu^3}{c^2} \\frac{1}{e^{x} - 1},
+    with 
+    .. math::
+        x = \\frac{h \\nu}{k_B T}.
     
     It returns the Planck function values for nu (can be vectorized) 
     for a given blackbody temperature.
 
     Parameters
     ----------
-    nu_in_GHz : float or numpy 1D array
+    nu_in_GHz : float or numpy ndarray
         Frequency in GHz at which we want the value of the Planck function.
     T_planck : float, optional
         Temperature of the Planck distribution in Kelvin.
@@ -46,8 +51,8 @@ def B_nu_T(nu_in_GHz, T_planck=T_CMB):
 
     Returns
     -------
-    float or numpy 1D array
-        A float value (or 1D array) for the value(s) of the Planck distribution.
+    float or numpy ndarray
+        A float value (or ndarray) for the value(s) of the Planck distribution.
 
     """
 
@@ -59,14 +64,19 @@ def B_nu_T(nu_in_GHz, T_planck=T_CMB):
 
 def B_prime_nu_T(nu_in_GHz, T_planck=T_CMB):
     """
-    B_prime_nu_T is the derivative Planck distribution function: dB(nu, T)/dT.
+    B_prime_nu_T is the derivative Planck distribution function defined as:
+    .. math::
+        \\frac{dB(\\nu, T)}{dT} = \\frac{h \\nu}{k_B T^2} \\frac{e^{x}}{e^{x} - 1} B(\\nu, T),
+    with 
+    .. math::
+        x = \\frac{h \\nu}{k_B T}.
     
-    It returns the first derivative of the Planck function wrt T, 
+    It returns the first derivative of the Planck function with respect to T, 
     for nu (can be vectorized) at a given blackbody temperature.
 
     Parameters
     ----------
-    nu_in_GHz : float or numpy 1D array
+    nu_in_GHz : float or numpy ndarray
         Frequency in GHz at which we want the value of the Planck function 
         derivative. 
     T_planck : float, optional
@@ -75,8 +85,8 @@ def B_prime_nu_T(nu_in_GHz, T_planck=T_CMB):
     
     Returns
     -------
-    float or numpy 1D array
-        A float value (or 1D array) for the value(s) of the differential Planck distribution.
+    float or numpy ndarray
+        A float value (or ndarray) for the value(s) of the differential Planck distribution.
 
     """
     
@@ -87,13 +97,18 @@ def B_prime_nu_T(nu_in_GHz, T_planck=T_CMB):
 
 def ysz_spectral_law(nu_in_GHz):
     """
-    ysz_spectral_law is the SED function for Compton y parameter.
-    It returns the frequency scaling of y SZ for nu (can be vectorized).
+    ysz_spectral_law is the SED function for Compton y parameter, defined as:
+    .. math:: 
+        y_{SZ} = \\frac{dB(\\nu, T)}{dT} \\left(\\frac{x}{\\tanh(\\frac{x}{2})} - 4\\right) T,
+    with 
+    .. math::
+        x = \\frac{h \\nu}{k_B T}.
+    It returns the frequency scaling of y_SZ for nu (can be vectorized).
 
     Parameters
     ----------
-    nu_in_GHz : float or numpy 1D array
-        Frequency in GHz at which we want the value of the y SZ SED. 
+    nu_in_GHz : float or numpy ndarray
+        Frequency in GHz at which we want the value of the y_SZ SED. 
     
     Notes
     ----- 
@@ -102,7 +117,7 @@ def ysz_spectral_law(nu_in_GHz):
     Returns
     -------
     float or numpy 1D array
-        A float value (or 1D array) for the value(s) of the y SZ SED.
+        A float value (or ndarray) for the value(s) of the y_SZ SED.
 
     """
     
@@ -115,7 +130,9 @@ def ysz_spectral_law(nu_in_GHz):
 
 def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
     """
-    greybody is the SED function for a greybody distribution.
+    greybody is the SED function for a greybody distribution, defined as:
+    .. math:: 
+        I_\\nu = A \\left(\\frac{\\nu}{\\nu_0}\\right)^{\\beta} \\frac{B(\\nu, T_{grey})}{B(\\nu_0, T_{grey})}.
     
     This function allows to set flux at reference frequency. If not used
     the output is just the frequency scaling of the greybody.
@@ -131,13 +148,13 @@ def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
     T_grey : float
         Greybody temperature in Kelvin.
     flux_ref : float, optional
-        Amplitude of greybody emissions at reference frequency in arbitrary units. 
+        Amplitude A of greybody emissions at reference frequency in arbitrary units. 
         Default value is 1 (returns frequency scaling).
 
     Returns
     -------
-    float or numpy 1D array
-        A float value (or 1D array) for the value(s) of the greybody SED.
+    float or numpy ndarray
+        A float value (or ndarray) for the value(s) of the greybody SED.
 
     """
         
@@ -150,7 +167,9 @@ def greybody(nu_in_GHz, nu_ref_in_GHz, spec_ind, T_grey, flux_ref=1.):
 
 def powerlaw(nu_in_GHz, nu_ref_in_GHz, spec_ind=1.):
     """
-    powerlaw is the SED function for a powerlaw distribution.
+    powerlaw is the SED function for a powerlaw distribution, defined as:
+    .. math:: 
+        \\left(\\frac{\\nu}{\\nu_0}\\right)^\\beta.
     
     This function outputs the frequency scaling of a powerlaw distribution.
 
@@ -165,8 +184,8 @@ def powerlaw(nu_in_GHz, nu_ref_in_GHz, spec_ind=1.):
     
     Returns
     -------
-    float or numpy 1D array
-        A float value (or 1D array) for the value(s) of the powerlaw freqency 
+    float or numpy ndarray
+        A float value (or ndarray) for the value(s) of the powerlaw freqency 
         scaling.
 
     """
@@ -176,7 +195,9 @@ def powerlaw(nu_in_GHz, nu_ref_in_GHz, spec_ind=1.):
 def modified_blackbody(nu_in_GHz, spec_ind, T_bb):
     """
     modified_blackbody is the frequency scaling function for a modified blackbody 
-    (MBB) distribution.
+    (MBB) distribution, defined as:
+    .. math:: 
+        \\nu^\\beta B(\\nu, T_{bb}).
     
     Comparing with greybody function, this provides modified blackbody frequency scaling 
     without a reference frequency. In principle it return only the numerator part of 
@@ -184,7 +205,7 @@ def modified_blackbody(nu_in_GHz, spec_ind, T_bb):
 
     Parameters
     ----------
-    nu_in_GHz : float or numpy 1D array
+    nu_in_GHz : float or numpy ndarray
         Frequency in GHz at which we want the value of the MBB function.
     spec_ind : float
         Spectral index of the MBB.
@@ -193,8 +214,8 @@ def modified_blackbody(nu_in_GHz, spec_ind, T_bb):
     
     Returns
     -------
-    float or numpy 1D array
-        A float value (or 1D array) for the value(s) of the MBB frequency scaling.
+    float or numpy ndarray
+        A float value (or ndarray) for the value(s) of the MBB frequency scaling.
 
     """
         

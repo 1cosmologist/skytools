@@ -1,0 +1,24 @@
+version: 2
+
+build:
+  os: "ubuntu-22.04"
+  tools:
+    python: "3.10"
+
+  commands:
+    - export READTHEDOCS_OUTPUT=_readthedocs
+    - pip install numpy
+    - pip install astropy
+    - pip install healpy
+    - pip install scipy 
+    - pip install joblib
+    - pip install pdoc3
+    - pdoc --html --config latex_math=True --template-dir pdoc --output-dir $READTHEDOCS_OUTPUT skytools
+    - mv $READTHEDOCS_OUTPUT/skytools $READTHEDOCS_OUTPUT/html
+
+# Explicitly set the version of Python and its requirements
+python:
+  install:
+    - requirements: ./requirements.txt
+    - method: pip
+      path: .

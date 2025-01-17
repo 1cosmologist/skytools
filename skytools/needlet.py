@@ -21,7 +21,7 @@
 #
 #########################################################################
 """
-CMBframe needlet transformation module provides functions and utilities
+SkyTools needlet transformation module provides functions and utilities
 to performs needlet transformation of data on a sphere. The module provides
 setup of cosine and gaussian needlets bands and are used in conjunction with 
 healpix sherical harmonic transformation of the data on the sphere.
@@ -172,7 +172,7 @@ def get_lmax_band(band, thresh=1.e-3):
 
     Parameters
     ----------
-    band : numpy array
+    band : numpy ndarray
         A 1D numpy array containing the needlet band. Typically ``needlets[:,i]`` 
         slice for the ith needlet band.
 
@@ -202,7 +202,7 @@ def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_mi
 
     Parameters
     ----------
-    alm_in : numpy array
+    alm_in : numpy ndarray
         A 1D numpy array of alm for a map obtained from healpy.
         Does not support multicomponent maps. For polarization 
         input should be either \(a^E_{\\ell m}\) or \(a^B_{\\ell m}\).
@@ -213,7 +213,7 @@ def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_mi
         Sets if all needlet scale maps have the same nside.
         If True then you can set the common nside for all scales 
         with needlet_nside. If nside not specified, the common 
-        nside for all scales is set by: math.ceil(math.log2(lmax)),
+        nside for all scales is set by: ``math.ceil(math.log2(lmax))``,
         with lmax determined from needlet bands.
     needlet_nside : int, optional
         Nside of needlet maps at all bands. Default is None.
@@ -298,7 +298,7 @@ def map2needlet(map_in, bands, needlet_nside=None, nodegrade=False, nlt_nside_mi
 
     Parameters
     ----------
-    map_in : numpy array
+    map_in : numpy ndarray
         A 1D numpy array for a healpix map. Does not support 
         multicomponent maps. For polarization input should be 
         either E or B mode scalar map. Does not support IQU maps.
@@ -378,7 +378,7 @@ def needlet2alm(nlt_map_in, bands):
 
     Returns
     -------
-    numpy array
+    numpy ndarray
         A numpy 1D array of output spherical harmonic coefficients are returned.
         The alm array is indexed in healpix C/python format. The output alm is 
         compatible with healpy SHTs.
@@ -434,7 +434,7 @@ def needlet2map(nside, nlt_map_in, bands, map_outfile=None):
 
     Returns
     -------
-    numpy array
+    numpy ndarray
         A numpy 1D array of a healpix map representing the combined information from
         all needlet scales. This map will have the nside set in the input.
     """
@@ -502,7 +502,7 @@ def read_needletmap_fits(infile, band_no=None):
         Default is None.
     Returns
     -------
-    list or numpy array
+    list or numpy ndarray
         If band_no is set to None, returns a list of healpix maps. One map for each 
         needlet band. Each healpix map is a numpy 1D array. If band_no is specified, 
         returns the healpix map as a numpy 1D array.
