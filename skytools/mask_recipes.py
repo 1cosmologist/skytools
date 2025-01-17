@@ -21,7 +21,7 @@
 #
 #########################################################################
 """ 
-The SkyTools mask recipes module provides a set of useful functions to construct sky masks.
+The mask recipes module provides a set of useful functions to construct sky masks.
 """
 
 import numpy as np 

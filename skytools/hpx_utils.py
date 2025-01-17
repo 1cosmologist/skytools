@@ -21,7 +21,7 @@
 #
 #########################################################################
 """
-The SkyTools HEALPix utilities module provides useful and frequently used macro funtions 
+The HEALPix utilities module provides useful and frequently used macro funtions 
 to augment the function set available with Healpy. Some of these utility functions are 
 inspired by HEALPix Fortran Facilities.
 """

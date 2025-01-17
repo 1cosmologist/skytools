@@ -119,6 +119,41 @@ def maskdist(mask_in, dist_from_edge_in_rad):
 
 def apodize_mask(mask_in, aposize_in_deg, apotype="c2", tune=None):
     
+    """
+    Apodize a mask using a specified apodization function.
+
+    This function modifies the input mask by applying a smooth transition 
+    at its edges using various apodization techniques. The type of 
+    apodization and its parameters are controlled by the `apotype` and 
+    `tune` arguments.
+
+    Parameters
+    ----------
+    mask_in : numpy.ndarray
+        The input binary mask to be apodized.
+    aposize_in_deg : float
+        The angular size of the apodization region in degrees.
+    apotype : str, optional
+        The type of apodization to apply. 
+        Options include 
+        "c1"/"sin" - C1 window from Grain et al. 2009, 
+        "c2"/"cos" - C2 window from Grain et al. 2009, 
+        "mbh"- Modified Barlett-Hanning window (as defined in Gautam, Kumar and Saxena 1996) when tune=0 it matches the Grain et al. C2 window definition, 
+        "cn"/"cosn" - cosine or nth cosine window from Nutall 1981 with tune >= 4 required, 
+        "nut"/"nuttall" - Nuttall window with 4 terms from Nutall 1981.
+        Default is "c2".
+    tune : float, optional
+        A tuning parameter for certain apodization types (mbh and cosn windows). Its meaning and 
+        valid range depend on the `apotype`. Default is None.
+
+    Returns
+    -------
+    numpy.ndarray
+        A numpy array representing the apodized mask, with values smoothly 
+        transitioning from 1 to 0 at the edges, based on the specified 
+        apodization type and parameters.
+    """
+
     angdist = maskdist(mask_in, np.deg2rad(aposize_in_deg))
     x = np.ones_like(angdist)
     x[angdist == hp.UNSEEN] = 1.

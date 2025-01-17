@@ -20,7 +20,9 @@
 # at shamik@lbl.gov
 #
 #########################################################################
-
+""" 
+This module contains functions for finding the border of a binary mask.
+"""
 import numpy as np 
 import healpy as hp
 import os

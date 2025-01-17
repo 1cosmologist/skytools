@@ -20,11 +20,12 @@
 # at shamik@lbl.gov
 #
 #########################################################################
-import numpy as np
 """ 
-The SkyTools binning utilities module provides useful and frequently used macro funtions 
+The binning utilities module provides useful and frequently used macro funtions 
 to bin power spectrum data.
 """
+
+import numpy as np
 
 class bins:
     
