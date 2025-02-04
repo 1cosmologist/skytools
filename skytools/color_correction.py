@@ -1,5 +1,5 @@
 import numpy as np
-import em_law as el 
+import em_law as el
 import scipy.constants as con
 
 def color_correction(em_law_type, nus_in_GHz, transmission = None, *args, **kwargs):
@@ -33,6 +33,5 @@ def color_correction(em_law_type, nus_in_GHz, transmission = None, *args, **kwar
     else:
         transmission = np.ones(nus_in_GHz.shape)
     weights = transmission / np.trapz(transmission, x = nus_in_Hz)
-    num_cc = np.trapz(weights * em_law_type(*args, **kwargs), x = nus_in_Hz)
-    deno_cc = em_law_type(*args, **kwargs) * np.trapz(weights, x = nus_in_Hz)
-    return num_cc/deno_cc
+    bp_em_law = np.trapz(weights*bp.band_int_em_law(em_law_type, nus_in_GHz, transmission = transmission, *args, **kwargs), x = nus_in_Hz)
+    return 1/bp_em_law
