@@ -34,7 +34,7 @@ datapath = os.getenv('SKYTOOLS_DATA')
 
 __pdoc__ = {}
 
-def apodized_gauss_beam(fwhm, lmax):
+def apodized_gauss_beam(fwhm, lmax, mode='i'):
     """
     Compute a Gaussian beam with a linear apodization at high ell to transition the beam to zero.
 
@@ -44,13 +44,21 @@ def apodized_gauss_beam(fwhm, lmax):
         The full width at half maximum of the beam in arcmin.
     lmax : int
         The multipole at which the beam goes to zero.
+    mode : str, optional
+        The mode of the beam. Choices are ``i`` for intensity, ``e`` for E-mode, and ``b`` for B-mode. Default is ``i``.
 
     Returns
     -------
     Bl : array
         The apodized beam up to multipole ``lmax``.
     """
-    Bl = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax)
+    
+    if mode == 'e':
+        Bl = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax, pol=True)[:,1]
+    elif mode == 'b':
+        Bl = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax, pol=True)[:,2]
+    else:
+        Bl = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax)
 
     Bl_apo = np.copy(Bl)
     dBl = np.gradient(Bl) 
