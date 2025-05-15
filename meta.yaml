@@ -1,5 +1,5 @@
 {% set name = "skytools" %}
-{% set version = "0.0.1b5" %}
+{% set version = "0.0.1b7" %}
 
 package:
   name: {{ name|lower }}
@@ -26,7 +26,7 @@ requirements:
     - python
     - astropy
     - healpy >=1.16.0
-    - numpy
+    - numpy >= 2.0.0
     - scipy
     - joblib
     

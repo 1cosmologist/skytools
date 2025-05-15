@@ -104,13 +104,13 @@ def KCMB_to_MJysr(nus_in_GHz, nuc_in_GHz=None, transmission=None):
 
         transmission = np.ones(nus_in_GHz.shape) 
 
-    weights = transmission / np.trapz(transmission, x=nus_in_GHz * con.giga)
+    weights = transmission / np.trapezoid(transmission, x=nus_in_GHz * con.giga)
 
     if nuc_in_GHz == None:
-        nuc_in_GHz = np.trapz(nus_in_GHz*weights, x=nus_in_GHz * con.giga)
+        nuc_in_GHz = np.trapezoid(nus_in_GHz*weights, x=nus_in_GHz * con.giga)
 
-    band_integrated_CMB = np.trapz(weights*el.B_prime_nu_T(nus_in_GHz), x=nus_in_GHz * con.giga)
-    band_integrated_nucbynu = np.trapz(weights*(nuc_in_GHz / nus_in_GHz), x=nus_in_GHz * con.giga)
+    band_integrated_CMB = np.trapezoid(weights*el.B_prime_nu_T(nus_in_GHz), x=nus_in_GHz * con.giga)
+    band_integrated_nucbynu = np.trapezoid(weights*(nuc_in_GHz / nus_in_GHz), x=nus_in_GHz * con.giga)
 
     return (band_integrated_CMB / band_integrated_nucbynu) * 1.e20  # 1.e20 factor converts W/m2/Hz to MJy.
 
@@ -147,10 +147,10 @@ def KCMB_to_ySZ(nus_in_GHz, transmission=None):
 
         transmission = np.ones(nus_in_GHz.shape) 
 
-    weights = transmission / np.trapz(transmission, x=nus_in_GHz * con.giga)
+    weights = transmission / np.trapezoid(transmission, x=nus_in_GHz * con.giga)
 
-    band_integrated_CMB = np.trapz(weights*el.B_prime_nu_T(nus_in_GHz), x=nus_in_GHz * con.giga)
-    band_integrated_ysz = np.trapz(weights*el.ysz_spectral_law(nus_in_GHz), x=nus_in_GHz * con.giga)
+    band_integrated_CMB = np.trapezoid(weights*el.B_prime_nu_T(nus_in_GHz), x=nus_in_GHz * con.giga)
+    band_integrated_ysz = np.trapezoid(weights*el.ysz_spectral_law(nus_in_GHz), x=nus_in_GHz * con.giga)
 
 # Referenece: Eq 33 from Planck 2013 XI HFI spectral response  
     return band_integrated_CMB/band_integrated_ysz  # returns in K_CMB^(-1) 

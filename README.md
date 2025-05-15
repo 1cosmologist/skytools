@@ -16,7 +16,7 @@ Install inside a conda environment. The current version targets python version *
 Following python packages are required for SkyTools to work:  
 1. `astropy`  
 2. `healpy (>=1.16.0)`  
-3. `numpy`  
+3. `numpy (>=2.0.0)`  
 4. `scipy`  
 5. `joblib`  
 
