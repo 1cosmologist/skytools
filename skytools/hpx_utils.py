@@ -492,3 +492,43 @@ def alm_c_lmaxchanger(lmax_i, lmax_f):
         return ALM.getidx(lmax_i, ls, ms)
     else:
         return np.arange(ALM.getsize(lmax_i), dtype=np.int64)
+    
+def select_ring(ring_number):
+    """
+    Returns the first and last pixel number of a given ring number 
+    on a Healpix map. 
+    Parameters
+    ----------
+    ring_number : int
+        The ring number
+    Returns
+    -------
+    first_pix_ring : int
+        The first pixel number of the ring
+    last_pix_ring : int
+        The last pixel number of the ring
+    """
+    first_pix_ring = 4*(ring_number)
+    last_pix_ring = 4*(ring_number + 1) - 1
+    return first_pix_ring, last_pix_ring
+
+def select_rings_nside(nside):
+    """
+    Parameters
+    ----------
+    nside : int
+        The nside of the healpix map
+
+    Returns
+    -------
+    list_ring_pixels : list of numpy arrays
+        A list of numpy arrays, each of which contains the pixel numbers that
+        belong to a particular ring number on a healpix map at a given nside.
+    """
+    number_of_rings = 4*nside - 1
+    list_ring_pixels = []
+    for i in range(number_of_rings):
+        first_pix_ring, last_pix_ring = select_ring(i)
+        # print(first_pix_ring, last_pix_ring)
+        list_ring_pixels.append(np.arange(first_pix_ring, last_pix_ring + 1))
+    return list_ring_pixels
