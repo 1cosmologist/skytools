@@ -607,7 +607,7 @@ def write_needletmap_fits(bands, nlt_map_in, outfile, unit=''):
     """
     Writes needlet maps and corresponding needlet band information to a fits file.
 
-    Paramaters
+    Parameters
     ----------
     bands : numpy ndarray
         A 2D numpy array of shape ``(lmax+1, nbands)`` conatining needlet bands
@@ -642,12 +642,57 @@ def write_needletmap_fits(bands, nlt_map_in, outfile, unit=''):
     hdulist = fits.HDUList(hdulist)
     hdulist.writeto(outfile, overwrite=True)
 
+def write_IQUneedletmap_fits(bands, nlt_map_in, outfile, unit=''):
+    """
+    Writes IQU needlet maps and corresponding needlet band information to a FITS file.
+
+    Parameters
+    ----------
+    bands : numpy.ndarray
+        2D array of shape (lmax+1, nbands) containing the needlet band filters.
+    nlt_map_in : list of numpy.ndarray
+        List of nbands arrays, each of shape (3, lmax_band + 1), where the first
+        dimension indexes I (0), Q (1), and U (2) components of the needlet maps.
+    outfile : str
+        Path to output FITS file.
+    unit : str, optional
+        Units to store in each map column header.
+
+    Notes
+    -----
+    - Primary HDU contains the bands.
+    - Each band has its own BinTableHDU, with 3 columns: I, Q, U.
+    """
+
+    nbands = bands.shape[1]
+    assert len(nlt_map_in) == nbands, "Mismatch between number of bands and number of map entries."
+
+    # Create the primary HDU to store bandpass filters
+    hdu_P = fits.PrimaryHDU(bands)
+    hdulist = [hdu_P]
+
+    comp_names = ['I', 'Q', 'U']
+
+    for i in range(nbands):
+        map_array = nlt_map_in[i]
+        assert map_array.shape[0] == 3, f"Expected 3 components (I, Q, U) in band {i}, got {map_array.shape[0]}"
+
+        cols = []
+        for j in range(3):
+            col = fits.Column(name=f'Band {i} {comp_names[j]}', format='D', unit=unit, array=map_array[j])
+            cols.append(col)
+
+        tbhdu = fits.BinTableHDU.from_columns(cols)
+        hdulist.append(tbhdu)
+
+    fits.HDUList(hdulist).writeto(outfile, overwrite=True)
+
 def read_needletmap_fits(infile, band_no=None):
     """
     Reads needlet map(s) contained in the BintableHDU of a fits file created with
     write_needletmap_fits. 
 
-    Paramaters
+    Parameters
     ----------
     infile : str
         Input filename, with path, to read the needlet scale maps from a fits file. 
@@ -679,13 +724,55 @@ def read_needletmap_fits(infile, band_no=None):
                 return np.array(hdulist[band_no+1].data['Band '+str(band_no)])
             else:
                 raise Exception("ERROR: band number exceeds number of bands in file.")
+            
+def read_IQUneedletmap_fits(infile, band_no=None):
+    """
+    Reads IQU needlet map(s) from a FITS file created with write_IQUneedletmap_fits.
+
+    Parameters
+    ----------
+    infile : str
+        Path to the FITS file. Must be created with write_IQUneedletmap_fits.
+    band_no : int, optional
+        Index of the needlet band to retrieve (0-based). If None, all bands are returned.
+
+    Returns
+    -------
+    list of np.ndarray or np.ndarray
+        - If band_no is None: returns a list of arrays of shape (3, lmax_band + 1),
+          one for each band.
+        - If band_no is specified: returns one array of shape (3, lmax_band + 1)
+          for the specified band.
+    """
+
+    with fits.open(infile) as hdulist:
+        bands = hdulist[0].data
+        nbands = bands.shape[1]
+
+        if band_no is None:
+            nlt_maps = []
+            for i in range(nbands):
+                I = hdulist[i + 1].data[f'Band {i} I']
+                Q = hdulist[i + 1].data[f'Band {i} Q']
+                U = hdulist[i + 1].data[f'Band {i} U']
+                nlt_maps.append(np.stack([I, Q, U]))
+            return nlt_maps
+
+        else:
+            if 0 <= band_no < nbands:
+                I = hdulist[band_no + 1].data[f'Band {band_no} I']
+                Q = hdulist[band_no + 1].data[f'Band {band_no} Q']
+                U = hdulist[band_no + 1].data[f'Band {band_no} U']
+                return np.stack([I, Q, U])
+            else:
+                raise ValueError(f"ERROR: band_no {band_no} exceeds available bands (0 to {nbands-1}).")
 
 def read_needletbands_fits(infile):
     """
     Reads needlet band information contained in PrimaryHDU of a fits file created with
     write_needletmap_fits.
 
-    Paramaters
+    Parameters
     ----------
     infile : str
         Input filename, with path, to read the needlet bands from a fits file. 
