@@ -493,42 +493,14 @@ def alm_c_lmaxchanger(lmax_i, lmax_f):
     else:
         return np.arange(ALM.getsize(lmax_i), dtype=np.int64)
     
-def select_ring_first_last_pix(ring_number):
-    """
-    Returns the first and last pixel number of a given ring number 
-    on a Healpix map. 
-    Parameters
-    ----------
-    ring_number : int
-        The ring number
-    Returns
-    -------
-    first_pix_ring : int
-        The first pixel number of the ring
-    last_pix_ring : int
-        The last pixel number of the ring
-    """
-    first_pix_ring = 4*(ring_number)
-    last_pix_ring = 4*(ring_number + 1) - 1
-    return first_pix_ring, last_pix_ring
-
-def select_rings_nside(nside):
-    """
-    Parameters
-    ----------
-    nside : int
-        The nside of the healpix map
-
-    Returns
-    -------
-    list_ring_pixels : list of numpy arrays
-        A list of numpy arrays, each of which contains the pixel numbers that
-        belong to a particular ring number on a healpix map at a given nside.
-    """
-    number_of_rings = 4*nside - 1
-    list_ring_pixels = []
-    for i in range(number_of_rings):
-        first_pix_ring, last_pix_ring = select_ring_first_last_pix(i)
-        # print(first_pix_ring, last_pix_ring)
-        list_ring_pixels.append(np.arange(first_pix_ring, last_pix_ring + 1))
-    return list_ring_pixels
+def compute_rings(nside):
+    npixring = np.zeros(4 * nside - 1, dtype=int)
+    npixring[0:nside] = 4 * (np.arange(nside) + 1)
+    npixring[nside:3 * nside] = 4 * nside
+    if nside > 1:
+        npixring[3 * nside:] = 4 * (nside - 1 - np.arange(nside - 1))
+    firstpixring = np.zeros(4 * nside - 1, dtype=np.int64)
+    for i in range(1, 4 * nside - 1):
+        firstpixring[i] = firstpixring[i - 1] + npixring[i - 1]
+    lastpixring = firstpixring + npixring - 1
+    return npixring, firstpixring, lastpixring
