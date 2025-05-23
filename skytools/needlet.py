@@ -291,6 +291,101 @@ def alm2needlet(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_mi
     del alm_in, bands
     return needlet_maps
 
+def almTEB2needletIQU(alm_in, bands, nodegrade=False, needlet_nside=None, nlt_nside_min=None, nlt_nside_max=None):
+    """
+    Performs needlet transform from input spherical harmonic coefficient (alm) of a map.
+
+    Parameters
+    ----------
+    alm_in : numpy array
+        A 3D numpy array of alm for a map obtained from healpy.
+        alm_in is [ \(a^T_{\\ell m}\), \(a^E_{\\ell m}\), \(a^B_{\\ell m}\)].
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)'' conatining 
+        needlet bands
+    nodegrade : bool, optional
+        Sets if all needlet scale maps have the same nside.
+        If True then you can set the common nside for all scales 
+        with needlet_nside. If nside not specified, the common 
+        nside for all scales is set by: math.ceil(math.log2(lmax)),
+        with lmax determined from needlet bands.
+    needlet_nside : int, optional
+        Nside of needlet maps at all bands. Default is None.
+    nlt_nside_min : int, optional
+        Minimum nside for any needlet scale maps. Default is None.
+    nlt_nside_max : int, optional
+        Maximum nside for any needlet scale maps. Default is None.
+
+    Notes
+    -----
+    When nside is not set by user the nside of each needlet scale map 
+    is 2^n such that ``2^n >= lmax_band`` (n is integer). The ``lmax_band`` is
+    obtained by calling `get_lmax_band`. 
+
+    Returns
+    -------
+    list
+        A list of healpix maps is returned. There will be nband healpix
+        maps as 3D numpy arrays. If all maps are not set to have the same
+        nside, do not convert the whole list of maps to a numpy ndarray.
+    """
+    
+    # if np.array(alm_in).ndim != 1:
+    #     raise Exception("ERROR: Cannot needlet transform multiple maps.")
+
+    lmin = 0
+    lmax = len(bands[:,0]) - 1
+
+    ALM = hp.Alm()
+    lmax_sht = ALM.getlmax(len(alm_in[0]))
+
+    nbands = len(bands[0,:])
+
+    # if lmax > lmax_sht:
+    #     needlet_bands = np.copy(bands[:lmax_sht+1,:nbands]) 
+    #     print("Note bands have higher lmax than alms. Some needlets may have no information")
+    # else :
+    needlet_bands = np.copy(bands)
+
+    nside_opts = np.array([1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192]) 
+
+    needlet_maps = []
+    for band in range(nbands):
+
+        lmax_band = get_lmax_band(needlet_bands[:, band])
+
+        # # lmax_band = np.max(np.where(needlet_bands[:,band] > 0))
+        # lmax_band = np.max(np.where(needlet_bands[:,band] > 0)[0])
+        # # print(lmax_band)
+        # if lmax_band != lmax or needlet_bands[lmax_band,band] < 5.e-2:
+        #     needlet_peak = np.min(np.where(needlet_bands[:,band] == np.max(needlet_bands[:,band]))[0])
+        #     lmax_band = min(np.where(needlet_bands[needlet_peak:,band] < 5.e-2)[0])
+        
+        if not nodegrade:
+            nside_band = np.min(nside_opts[nside_opts >= lmax_band])
+            if nlt_nside_min != None :
+                if nside_band < nlt_nside_min : nside_band = nlt_nside_min
+            if nlt_nside_max != None :
+                if nside_band > nlt_nside_max : nside_band = nlt_nside_max 
+        else :
+            if needlet_nside != None:
+                nside = needlet_nside
+            else:
+                nside = int(2**(mt.ceil(mt.log2(lmax))))
+
+            nside_band = nside 
+
+        # print(nside_band, lmax_band)
+        wavalm = np.zeros((3, alm_in.shape[1]), dtype = "complex")
+        for i in range(3):
+            wavalm[i] = hp.almxfl(np.copy(alm_in[i]), needlet_bands[:,band])
+        needlet_maps.append(hp.alm2map(wavalm, nside_band, pol=True))
+
+        del lmax_band, nside_band, wavalm
+
+    del alm_in, bands
+    return needlet_maps
+
 def map2needlet(map_in, bands, needlet_nside=None, nodegrade=False, nlt_nside_min=None, nlt_nside_max=None):
     """
     Performs needlet transform from input healpix map. This
@@ -348,6 +443,66 @@ def map2needlet(map_in, bands, needlet_nside=None, nodegrade=False, nlt_nside_mi
     alm_temp = hp.map2alm(map_in, lmax=lmax_sht, pol=False, use_weights=True, datapath=datapath)
 
     needlet_map = alm2needlet(alm_temp, bands, needlet_nside=needlet_nside, nodegrade=nodegrade, nlt_nside_min=nlt_nside_min, nlt_nside_max=nlt_nside_max)
+
+    del alm_temp
+
+    return needlet_map
+
+def mapIQU2needletIQU(map_in, bands, needlet_nside=None, nodegrade=False, nlt_nside_min=None, nlt_nside_max=None):
+    """
+    Performs needlet transform from input healpix map. This
+    is a map level wrapper for alm2needlet function.
+
+    Parameters
+    ----------
+    map_in : numpy array
+        A 3D numpy array for a healpix map which represents IQU maps.
+    bands : numpy ndarray
+        A 2D numpy array of shape ``(lmax+1, nbands)`` conatining 
+        needlet bands
+    nodegrade : bool, optional
+        Sets if all needlet scale maps have the same nside.
+        If True then you can set the common nside for all scales 
+        with needlet_nside. If nside not specified, the common 
+        nside for all scales is set by: \(\\lceil \\log_2(\ell_{\\rm max}) \\rceil \),
+        with lmax determined from needlet bands.
+    needlet_nside : int, optional
+        Nside of needlet maps at all bands. Default is None.
+    nlt_nside_min : int, optional
+        Minimum nside for any needlet scale maps. Default is None.
+    nlt_nside_max : int, optional
+        Maximum nside for any needlet scale maps. Default is None.
+
+    Notes
+    -----
+    When nside is not set by user the nside of each needlet scale map 
+    is 2^n such that ``2^n >= lmax_band`` (n is integer). The ``lmax_band`` is
+    obtained by calling get_lmax_band. 
+
+    Returns
+    -------
+    list
+        A list of healpix maps is returned. There will be nband healpix
+        maps as 3D numpy arrays. If all maps are not set to have the same
+        nside, do not convert the whole list of maps to a numpy ndarray.
+    """
+
+    # if np.array(map_in).ndim != 1:
+    #     raise Exception("ERROR: Cannot needlet transform multiple maps.")
+
+    lmax_wv = len(bands[:,0])-1
+    nside =  hp.npix2nside(len(map_in[0]))
+    lmax_map = 3*nside - 1
+
+    if lmax_wv > lmax_map:
+        print("WARNING: lmax of needlet bands exceeds map lmax limit.")
+        lmax_sht = lmax_map
+    else:
+        lmax_sht = lmax_wv
+
+    alm_temp = hp.map2alm(map_in, lmax=lmax_sht, pol=True, use_weights=True, datapath=datapath)
+
+    needlet_map = almTEB2needletIQU(alm_temp, bands, needlet_nside=needlet_nside, nodegrade=nodegrade, nlt_nside_min=nlt_nside_min, nlt_nside_max=nlt_nside_max)
 
     del alm_temp
 

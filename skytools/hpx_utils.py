@@ -707,3 +707,15 @@ def alm_c_lmaxchanger(lmax_i, lmax_f):
         return ALM.getidx(lmax_i, ls, ms)
     else:
         return np.arange(ALM.getsize(lmax_i), dtype=np.int64)
+    
+def compute_rings(nside):
+    npixring = np.zeros(4 * nside - 1, dtype=int)
+    npixring[0:nside] = 4 * (np.arange(nside) + 1)
+    npixring[nside:3 * nside] = 4 * nside
+    if nside > 1:
+        npixring[3 * nside:] = 4 * (nside - 1 - np.arange(nside - 1))
+    firstpixring = np.zeros(4 * nside - 1, dtype=np.int64)
+    for i in range(1, 4 * nside - 1):
+        firstpixring[i] = firstpixring[i - 1] + npixring[i - 1]
+    lastpixring = firstpixring + npixring - 1
+    return npixring, firstpixring, lastpixring
