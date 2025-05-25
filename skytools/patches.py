@@ -71,3 +71,36 @@ def read_IQU_patchmap_fits(filename, x, y):
             iqu_patch[i] = flat.reshape((x, y))
 
     return bands, iqu_patch
+def write_I_patchmap_fits(bands, x, y, I_patch, outfile, unit=''):
+    """
+    Writes a single I-component patch map and the needlet band filters to a FITS file.
+
+    Parameters
+    ----------
+    bands : numpy.ndarray
+        2D array of shape (lmax+1, nbands) containing the needlet band filters.
+    x : int
+        Number of pixels in x direction.
+    y : int
+        Number of pixels in y direction.
+    I_patch : numpy.ndarray
+        2D array of shape (x, y) for the intensity component of the patch map.
+    outfile : str
+        Path to output FITS file.
+    unit : str, optional
+        Units to store in the map column header.
+    """
+    assert I_patch.shape == (x, y), f"Expected shape ({x}, {y}), got {I_patch.shape}"
+
+    # Primary HDU to store the bandpass filters
+    hdu_P = fits.PrimaryHDU(bands)
+    hdulist = [hdu_P]
+
+    # Flatten the I map and store as a single FITS column
+    flat_array = I_patch.flatten()
+    col = fits.Column(name='I', format='D', unit=unit, array=flat_array)
+    tbhdu = fits.BinTableHDU.from_columns([col])
+    hdulist.append(tbhdu)
+
+    # Write to FITS
+    fits.HDUList(hdulist).writeto(outfile, overwrite=True)
