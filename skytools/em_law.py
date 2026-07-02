@@ -95,6 +95,31 @@ def B_prime_nu_T(nu_in_GHz, T_planck=T_CMB):
     prefactor = con.h * nu_in_Hz / con.k / T_planck**2.
     return prefactor * np.exp(x) / (np.exp(x) - 1.) * B_nu_T(nu_in_GHz)
 
+def Brj_prime_nu_T(nus_in_GHz):
+    """
+    Brj_prime_nu_T is the Rayleigh-Jeans approximation of the derivative 
+    Planck distribution function with respect to temperature, defined as:
+    .. math::
+        \\frac{dB_{RJ}(\\nu, T)}{dT} = \\frac{2 \\nu^2 k_B}{c^2}.
+    
+    It returns the first derivative of the Rayleigh-Jeans approximation 
+    of the Planck function with respect to T for nu (can be vectorized).
+
+    Parameters
+    ----------
+    nus_in_GHz : float or numpy ndarray
+        Frequency in GHz at which we want the value of the Rayleigh-Jeans 
+        Planck function derivative.
+    
+    Returns
+    -------
+    float or numpy ndarray
+        A float value (or ndarray) for the value(s) of the differential 
+        Rayleigh-Jeans distribution.
+
+    """
+    return 2 * (nus_in_GHz * con.giga)**2. * con.k / con.c**2.
+
 def ysz_spectral_law(nu_in_GHz):
     """
     ysz_spectral_law is the SED function for Compton y parameter, defined as:

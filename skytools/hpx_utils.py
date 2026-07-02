@@ -33,6 +33,7 @@ import os
 datapath = os.getenv('SKYTOOLS_DATA')
 
 __pdoc__ = {}
+__pdoc__['_get_beam'] = False
 
 def apodized_gauss_beam(fwhm, lmax, mode='i'):
     """
@@ -253,11 +254,65 @@ def roll_bin_Cl(Cl_in, dl_min=10, dlbyl=0.4, dl_max=None, fmt_nmt=False):
 
     return Cl_binned
 
+def _get_beam(fwhm, beam, mode, lmax, n_alms):
+    """
+    Resolve a beam transfer function and beam count from fwhm/beam inputs for a given mode.
+
+    Parameters
+    ----------
+    fwhm : float or None
+        FWHM in arcmin of a Gaussian beam. Ignored if ``beam`` is provided.
+    beam : array-like or None
+        Explicit beam transfer function of shape ``(lmax+1,)`` or ``(lmax+1, n_alms)``.
+    mode : str
+        Beam mode: one of ``i``, ``t``, ``e``, ``b``, ``eb``, ``iqu``, ``teb``.
+    lmax : int
+        Maximum multipole of the alms.
+    n_alms : int
+        Number of alms (used to validate multi-beam inputs).
+
+    Returns
+    -------
+    beam_arr : numpy ndarray
+        Resolved beam of shape ``(lmax+1,)`` or ``(lmax+1, n_alms)``.
+    nbeams : int
+        Number of beams in ``beam_arr`` (1 or ``n_alms``).
+    """
+    _VALID_MODES = {'i', 't', 'e', 'b', 'eb', 'iqu', 'teb'}
+    if isinstance(beam, (np.ndarray, list, tuple)):
+        beam_arr = np.array(beam)
+        if beam_arr.ndim == 1:
+            nbeams = 1
+        else:
+            nbeams = beam_arr.shape[1]
+            if nbeams != n_alms:
+                raise Exception("ERROR: Either supply same number of beams as alms or supply one to use for all. Aborting!")
+        if len(beam_arr) != lmax + 1:
+            raise Exception("ERROR: beam must have same lmax as alm. Aborting!")
+        if (mode.lower() in ['iqu', 'teb']) and (nbeams != 3):
+            raise Exception("ERROR: For IQU/TEB mode 3 beams are to be supplied. Aborting!")
+    elif fwhm is not None:
+        beam_arr = hp.gauss_beam(np.deg2rad(fwhm / 60.), lmax=lmax, pol=True)[:, :3]
+        nbeams = 3
+        if mode.lower() in ['i', 't']:
+            beam_arr = beam_arr[:, 0]
+            nbeams = 1
+        elif mode.lower() in ['e', 'b', 'eb']:
+            beam_arr = beam_arr[:, 1]
+            nbeams = 1
+        elif mode.lower() not in _VALID_MODES:
+            raise Exception("ERROR: Unrecognized mode! Only supported options={t, e, b, eb, i, teb, iqu}. Aborting!")
+    else:
+        beam_arr = np.ones((lmax + 1,))
+        nbeams = 1
+    return beam_arr, nbeams
+
+
 def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None, pixwin_in=None, pixwin_out=None, mode='i'):
     """
     This is equivalent to the HEALPix Fortran utility by the same name, used to change the beam and/or pixel window of alms.
     The effective operation is: 
-        \( a^{\\rm out}_{\\ell m} = \\frac{b^{\\rm out}_\\ell p^{\\rm out}_\\ell}{b^{\\rm in}_\\ell p^{\\rm in}_\\ell} a^{\\rm in}_{\\ell m} \)
+        \\( a^{\\rm out}_{\\ell m} = \\frac{b^{\\rm out}_\\ell p^{\\rm out}_\\ell}{b^{\\rm in}_\\ell p^{\\rm in}_\\ell} a^{\\rm in}_{\\ell m} \\)
 
     Parameters
     ----------
@@ -311,71 +366,9 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
     ALM = hp.Alm()
     lmax = ALM.getlmax(len(alm_in[0]))
 
-    if isinstance(beam_in, (np.ndarray, list, tuple)):
-        beam_in = np.array(beam_in)
+    beam_in, nbeams_in = _get_beam(fwhm_in, beam_in, mode, lmax, n_alms)
+    beam_out, nbeams_out = _get_beam(fwhm_out, beam_out, mode, lmax, n_alms)
 
-        if beam_in.ndim == 1:
-            nbeams_in = 1.
-        else: 
-            nbeams_in = beam_in.shape[1]
-            if nbeams_in != n_alms:
-                raise Exception("ERROR: Either supply same number of beams as alms or supply one to use for all. Aborting!")
-                
-        if len(beam_in) != lmax+1:
-                raise Exception("ERROR: beam_in must have same lmax as alm. Aborting!")
-                
-        if (mode.lower() in ['iqu', 'teb']) and (nbeams_in != 3):
-            raise Exception("ERROR: For IQU/TEB mode 3 input beams are to be supplied. Aborting!")
-    else:
-        if fwhm_in != None:
-            beam_in = hp.gauss_beam(np.deg2rad(fwhm_in / 60.), lmax=lmax, pol=True)[:,:3]
-            nbeams_in = 3
-
-            if mode.lower() in ['i', 't']:
-                beam_in = beam_in[:,0]
-                nbeams_in = 1
-            elif mode.lower() in ['e', 'b', 'eb']:
-                beam_in = beam_in[:,1]
-                nbeams_in = 1
-            elif not (mode.lower() in ['iqu','teb']):
-                raise Exception("ERROR: Unrecognized mode! Only supported options={t, e, b, eb, i, qu, teb, iqu}. Aborting!")
-        else:
-            beam_in = np.ones((lmax+1,))
-            nbeams_in = 1
-
-            
-    if isinstance(beam_out, (np.ndarray, list, tuple)):
-        beam_out = np.array(beam_out)
-        if beam_out.ndim == 1:
-            nbeams_out = 1.
-        else: 
-            nbeams_out = beam_out.shape[1]
-            if nbeams_out != n_alms:
-                raise Exception("ERROR: Either supply same number of beams as alms or supply one to use for all. Aborting!")
-
-        if len(beam_out) != lmax+1:
-                raise Exception("ERROR: beam_out must have same lmax as alm. Aborting!")
-
-        if (mode.lower() in ['iqu', 'teb']) and (nbeams_out != 3):
-            raise Exception("ERROR: For IQU/TEB mode 3 output beams are to be supplied. Aborting!")
-    else:
-        if fwhm_out != None:
-            beam_out = hp.gauss_beam(np.deg2rad(fwhm_out / 60.), lmax=lmax, pol=True)[:,:3]
-            nbeams_out = 3
-
-            if mode.lower() in ['i', 't']:
-                beam_out = beam_out[:,0]
-                nbeams_out = 1
-            elif mode.lower() in ['e', 'b', 'eb',]:
-                beam_out = beam_out[:,1]
-                nbeams_out = 1
-            elif not (mode.lower() in ['iqu','teb']):
-                raise Exception("ERROR: Unrecognized mode! Only supported options={t, e, b, eb, i, teb, iqu}. Aborting!")
-        else:
-            beam_out = np.ones((lmax+1,))
-            nbeams_out = 1
-
-    # print(n_alms, beam_in.shape, beam_out.shape, alm_in.shape)
     if isinstance(pixwin_in, (int,float)):
         pixwin_in = hp.pixwin(int(pixwin_in), lmax=lmax)
         beam_in *= pixwin_in
@@ -393,7 +386,8 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
 
         del alm_in, beam_factor, beam_in, beam_out
 
-        if n_alms == 1: return alm_out[0]
+        if n_alms == 1:
+            return alm_out[0]
 
         return alm_out
     
@@ -406,7 +400,6 @@ def process_alm(alm_in, fwhm_in=None, fwhm_out=None, beam_in=None, beam_out=None
             for ibeam in range(nbeams_in):
                 beam_factor[:,ibeam] = compute_beam_ratio(beam_in[:,ibeam], beam_out)
         
-        # print(beam_factor.shape, beam_factor)
         alm_out = np.zeros_like(alm_in)
         for i in range(n_alms):
             alm_out[i] = hp.almxfl(alm_in[i], beam_factor[:,i])
