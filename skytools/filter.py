@@ -59,8 +59,8 @@ def super_filter(map_in, nside_sup, operation):
 
     return operation_super
 
-def harmonic_low_pass_filter(ell_one_cut, ell_zero_cut, lmax):
-    """Build a harmonic low-pass transfer function with cosine transition.
+def harmonic_lowpass_filter(ell_one_cut, ell_zero_cut, lmax):
+    """Build a harmonic lowpass transfer function with cosine transition.
 
     Parameters
     ----------
@@ -81,8 +81,8 @@ def harmonic_low_pass_filter(ell_one_cut, ell_zero_cut, lmax):
 
     return cos_bands[:, 0]
 
-def harmonic_high_pass_filter(ell_zero_cut, ell_one_cut, lmax):
-    """Build a harmonic high-pass transfer function with cosine transition.
+def harmonic_highpass_filter(ell_zero_cut, ell_one_cut, lmax):
+    """Build a harmonic highpass transfer function with cosine transition.
 
     Parameters
     ----------
