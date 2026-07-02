@@ -27,7 +27,7 @@ requires = ['meson-python']
 
 [project]
 name = 'skytools'
-version = '0.0.1.b7'
+dynamic = ['version']
 description = 'A library of useful tools for CMB data analysis.'
 readme = 'README.md'
 requires-python = '>=3.10'
@@ -41,6 +41,5 @@ dependencies = [
 license = {file = 'LICENSE.txt'}
 authors = [
   {name = 'Shamik Ghosh', email = 'shamik@lbl.gov'},
-  {name = 'Jacques Delabrouille', email = 'jdelabrouille@lbl.gov'},
-  {name = 'Elisa Russier', email = 'erussier@lbl.gov'}
+  {name = 'Jacques Delabrouille', email = 'jdelabrouille@lbl.gov'}
 ]

@@ -23,7 +23,7 @@
 
 project(
     'skytools',
-    version: '0.0.1.b7',
+    version: run_command('sh', '-c', 'cat VERSION', check: true).stdout().strip(),
     meson_version: '>=0.63.0',
     default_options: [
       # The default can yield broken results.
@@ -65,7 +65,9 @@ py_sources = [
     'skytools/__init__.py',
     'skytools/binning_utils.py',
     'skytools/border_finder.py',
+    'skytools/color_correction.py',
     'skytools/em_law.py',
+    'skytools/filter.py',
     'skytools/hpx_utils.py',
     'skytools/mask_recipes.py',
     'skytools/mask_tools.py',

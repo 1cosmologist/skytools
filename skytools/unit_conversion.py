@@ -45,6 +45,8 @@ from . import em_law as el
 __pdoc__ = {}
 
 T_CMB = 2.7255 # K
+c12o16_lines = np.arange(1, 6) * 115.271
+c13o16_lines = np.arange(1, 6) * 110.201
 
 def MJysr_to_Kb(nuc_in_GHz):
     """
@@ -85,8 +87,8 @@ def KCMB_to_MJysr(nus_in_GHz, nuc_in_GHz=None, transmission=None):
         average of nus_in_GHz.
     transmission: np.ndarray, default=None
         Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
-        of transmission, assuming \(\\lambda^2\) factor is multipled and the transmission is in units of
-        MJy/sr. If your bandpass is in \(K_b\) unit then the \(\\lambda^2\) factor is missing.
+        of transmission, assuming \\(\\lambda^2\\) factor is multipled and the transmission is in units of
+        MJy/sr. If your bandpass is in \\(K_b\\) unit then the \\(\\lambda^2\\) factor is missing.
 
     Returns
     -------
@@ -127,8 +129,8 @@ def KCMB_to_ySZ(nus_in_GHz, transmission=None):
 
     transmission: np.ndarray, default=None
         Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
-        of transmission, assuming \(\\lambda^2\) factor is multipled and the transmission is in units of
-        MJy/sr. If your bandpass is in \(K_b\) unit then the \(\\lambda^2\) factor is missing.
+        of transmission, assuming \\(\\lambda^2\\) factor is multipled and the transmission is in units of
+        MJy/sr. If your bandpass is in \\(K_b\\) unit then the \\(\\lambda^2\\) factor is missing.
 
     Returns
     -------
@@ -154,3 +156,109 @@ def KCMB_to_ySZ(nus_in_GHz, transmission=None):
 
 # Referenece: Eq 33 from Planck 2013 XI HFI spectral response  
     return band_integrated_CMB/band_integrated_ysz  # returns in K_CMB^(-1) 
+
+def C12O16_KRJkms_to_KCMB(nus_in_GHz, transmission=None, threshold=1e-4):
+    """
+    Computes conversion factor from K_RJ km/s to K_CMB for C12O16 line emission.
+
+    Parameters
+    ----------
+    nus_in_GHz: float or np.ndarray
+        If single float value is provided, assumed to be delta transmission.
+        If np.ndarray is provided without transmission, assume tophat transmission.
+
+    transmission: np.ndarray, default=None
+        Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
+        of transmission, assuming \\(\\lambda^2\\) factor is multipled and the transmission is in units of
+        MJy/sr. If your bandpass is in \\(K_b\\) unit then the \\(\\lambda^2\\) factor is missing.
+
+    threshold: float, default=1e-4
+        Threshold value for filtering transmission data.
+
+    Returns
+    -------
+    float or np.ndarray
+        A float or array value that is the conversion factor from K_RJ km/s to K_CMB for C12O16.
+    """
+
+    if (not isinstance(nus_in_GHz, (list, np.ndarray))) and (nus_in_GHz in c12o16_lines):
+        return el.B_prime_nu_T(nus_in_GHz) / el.Brj_prime_nu_T(c12o16_lines[c12o16_lines == nus_in_GHz])
+
+    if isinstance(transmission, (list,np.ndarray)):
+        if len(transmission) != len(nus_in_GHz):
+            raise Exception("ERROR: transmission and frequency arrays are not of same size.")
+
+    else:
+
+        transmission = np.ones(nus_in_GHz.shape) 
+    
+    nus_in_GHz   = nus_in_GHz[transmission > threshold]
+    transmission = transmission[transmission > threshold] 
+    
+    nu_lo = np.min(nus_in_GHz)
+    nu_hi = np.max(nus_in_GHz)
+
+    weights = transmission / np.trapezoid(transmission, x=nus_in_GHz * con.giga)
+    
+    
+    co12o16_in_band = c12o16_lines[(c12o16_lines > nu_lo) & (c12o16_lines < nu_hi)]
+    weights_co12016 = np.interp(co12o16_in_band * con.giga, nus_in_GHz * con.giga, weights)
+    
+    band_integ_c12o16 = weights_co12016 * (co12o16_in_band * con.giga / con.c) * el.Brj_prime_nu_T(co12o16_in_band)
+    
+    band_integrated_CMB = np.trapezoid(weights * el.B_prime_nu_T(nus_in_GHz), x=nus_in_GHz * con.giga)
+
+    return (band_integ_c12o16 / band_integrated_CMB) 
+
+
+def C13O16_KRJkms_to_KCMB(nus_in_GHz, transmission=None, threshold=1e-4):
+    """
+    Computes conversion factor from K_RJ km/s to K_CMB for C13O16 line emission.
+
+    Parameters
+    ----------
+    nus_in_GHz: float or np.ndarray
+        If single float value is provided, assumed to be delta transmission.
+        If np.ndarray is provided without transmission, assume tophat transmission.
+
+    transmission: np.ndarray, default=None
+        Must be the same size as nus_in_GHz. Need not be normalized to one. Assume HFI/LFI definition
+        of transmission, assuming \\(\\lambda^2\\) factor is multipled and the transmission is in units of
+        MJy/sr. If your bandpass is in \\(K_b\\) unit then the \\(\\lambda^2\\) factor is missing.
+
+    threshold: float, default=1e-4
+        Threshold value for filtering transmission data.
+
+    Returns
+    -------
+    float or np.ndarray
+        A float or array value that is the conversion factor from K_RJ km/s to K_CMB for C13O16.
+    """
+
+    if (not isinstance(nus_in_GHz, (list, np.ndarray))) and (nus_in_GHz in c13o16_lines):
+        return el.B_prime_nu_T(nus_in_GHz) / el.Brj_prime_nu_T(c13o16_lines[c13o16_lines == nus_in_GHz])
+
+    if isinstance(transmission, (list,np.ndarray)):
+        if len(transmission) != len(nus_in_GHz):
+            raise Exception("ERROR: transmission and frequency arrays are not of same size.")
+
+    else:
+
+        transmission = np.ones(nus_in_GHz.shape) 
+    
+    nus_in_GHz   = nus_in_GHz[transmission > threshold]
+    transmission = transmission[transmission > threshold] 
+    
+    nu_lo = np.min(nus_in_GHz)
+    nu_hi = np.max(nus_in_GHz)
+    
+    weights = transmission / np.trapezoid(transmission, x=nus_in_GHz * con.giga)
+    
+    co13o16_in_band = c13o16_lines[(c13o16_lines > nu_lo) & (c13o16_lines < nu_hi)]
+    weights_co13016 = np.interp(co13o16_in_band * con.giga, nus_in_GHz * con.giga, weights)
+    
+    band_integ_c13o16 = weights_co13016 * (co13o16_in_band * con.giga / con.c) * el.Brj_prime_nu_T(co13o16_in_band)
+    
+    band_integrated_CMB = np.trapezoid(weights * el.B_prime_nu_T(nus_in_GHz), x=nus_in_GHz * con.giga)
+
+    return (band_integ_c13o16 / band_integrated_CMB) 
