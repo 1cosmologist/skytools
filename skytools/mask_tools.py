@@ -155,7 +155,7 @@ def apodize_mask(mask_in, aposize_in_deg, apotype="c2", tune=None):
     """
 
     # angdist = maskdist(mask_in, np.deg2rad(aposize_in_deg))
-    angdist = hp.dist2holes(mask_in, maxdist=np.deg2rad(aposize_in_deg))
+    angdist = hp.dist2holes((1 - mask_in), maxdist=np.deg2rad(aposize_in_deg))
     x = np.ones_like(angdist)
     x[angdist == hp.UNSEEN] = 1.
     if apotype.lower() in ["c1", "sin","c2","cos"]:
